@@ -3,16 +3,7 @@ import { GoogleApiService } from './shared/google-api.service';
 
 @Component({
   selector: 'app-root',
-  template: `
-    <div *ngIf="!isLoading">
-      <div>
-        <button *ngIf="isSignedIn" (click)="onClickSignOut()">sign out</button>
-        <button *ngIf="!isSignedIn" (click)="onClickSignIn()">sign in</button>
-      </div>
-      <router-outlet *ngIf="isSignedIn"></router-outlet>
-      <div></div>
-    </div>
-  `,
+  templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
   /**
