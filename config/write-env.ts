@@ -3,7 +3,6 @@ import { join } from 'path';
 import { config } from 'dotenv';
 
 const dotenv = config()?.parsed;
-console.log(dotenv);
 
 const ENV_KEY_API_KEY = 'GOOGLE_DRIVE_API_KEY';
 const ENV_KEY_CLINET_ID = 'GOOGLE_DRIVE_API_CLIENT_ID';
