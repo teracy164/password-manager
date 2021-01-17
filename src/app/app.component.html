@@ -1,0 +1,11 @@
+<div *ngIf="!isLoading">
+    <mat-toolbar color="primary" style="justify-content: space-between;">
+        <span>Password Manager</span>
+        <span>
+            <button mat-raised-button *ngIf="isSignedIn" (click)="onClickSignOut()">sign out</button>
+            <button mat-raised-button *ngIf="!isSignedIn" (click)="onClickSignIn()">sign in</button>
+        </span>
+    </mat-toolbar>
+    <router-outlet *ngIf="isSignedIn"></router-outlet>
+    <span *ngIf="!isSignedIn">サインインしてください</span>
+</div>
