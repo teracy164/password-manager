@@ -3,13 +3,12 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { Page1Component } from './pages/page1.component';
-import { GoogleDriveApiService } from './shared/google-drive-api.service';
+import { CommonModule } from '@angular/common';
+import { PasswordModule } from './password/password.module';
 
 @NgModule({
-  declarations: [AppComponent, Page1Component],
-  imports: [BrowserModule, AppRoutingModule],
-  providers: [GoogleDriveApiService],
+  declarations: [AppComponent],
+  imports: [BrowserModule, AppRoutingModule, CommonModule, PasswordModule],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

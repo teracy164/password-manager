@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { Page1Component } from './pages/page1.component';
+import { PasswordComponent } from './password/password.component';
+import { SelectFileComponent } from './select-file/select-file.component';
 
 const routes: Routes = [
-  {path: 'page1', component: Page1Component}
+  { path: '', component: PasswordComponent },
+  { path: 'select', component: SelectFileComponent },
+  { path: '**', redirectTo: '/' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

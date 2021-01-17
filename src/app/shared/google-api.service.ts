@@ -6,7 +6,7 @@ export class GoogleApiService {
   readonly DISCOVERY_DOCS = [
     'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
   ];
-  readonly SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+  readonly SCOPES = 'https://www.googleapis.com/auth/drive';
 
   /** Google API JS読み込み完了時 */
   readonly onLoad = new EventEmitter<boolean>();
