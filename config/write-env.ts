@@ -4,8 +4,8 @@ import { config } from 'dotenv';
 
 const dotenv = config()?.parsed;
 
-const ENV_KEY_API_KEY = 'GOOGLE_DRIVE_API_KEY';
-const ENV_KEY_CLINET_ID = 'GOOGLE_DRIVE_API_CLIENT_ID';
+const ENV_KEY_API_KEY = 'GOOGLE_API_KEY';
+const ENV_KEY_CLINET_ID = 'GOOGLE_API_CLIENT_ID';
 
 const env = {
   apiKey: process.env[ENV_KEY_API_KEY],
