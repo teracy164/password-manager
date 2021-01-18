@@ -11,9 +11,10 @@ export interface FileMetaInfo {
 
 export interface Password {
   name: string;
+  loginId: string;
+  password: string;
   description: string;
   url: string;
-  password: string;
 }
 
 export interface PasswordFile {

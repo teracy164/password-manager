@@ -1,5 +1,15 @@
-<div *ngIf="!isLoading">
+<div class="page" *ngIf="!isLoading">
   <app-header [isSignedIn]="isSignedIn"></app-header>
-  <router-outlet *ngIf="isSignedIn"></router-outlet>
-  <span *ngIf="!isSignedIn">サインインしてください</span>
+  <div class="main">
+    <router-outlet *ngIf="isSignedIn"></router-outlet>
+    <div *ngIf="!isSignedIn" class="no-auth">
+      <div>
+        <h3>本システムはGoogle Driveを利用したパスワード管理ツールです</h3>
+        <p>・ブラウザがあればどんな環境でも利用できます</p>
+        <p>・暗号化してからデータを送信するため安心</p>
+
+        ※当システムは予告なしに終了する可能性があります
+      </div>
+    </div>
+  </div>
 </div>

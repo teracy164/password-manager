@@ -24,7 +24,6 @@ export class PasswordService {
           this.key
         );
       }
-      console.log(this.passwords);
       return true;
     } catch (err) {
       console.error(err);
@@ -32,9 +31,15 @@ export class PasswordService {
     }
   }
 
+  async selectFile(file: FileMetaInfo) {
+    this.passwords = await this.drive.getPasswordFile(file.id, this.key);
+    this.storage.setPasswordFileInfo(file);
+  }
+
   async createFile(fileName: string) {
     const result = await this.drive.createEmptyFile(fileName);
     if (result) {
+      this.selected = result;
       this.storage.setPasswordFileInfo(result);
     }
 

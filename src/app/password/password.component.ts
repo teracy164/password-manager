@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   DetailDialogComponent,
   DetailDialogData,
 } from './detail-dialog/detail-dialog.component';
 import { PasswordService } from './password.service';
+import { SelectFileDialogComponent } from './select-file-dialog/select-file-dialog.component';
 
 @Component({
   selector: 'app-password',
@@ -33,7 +34,6 @@ export class PasswordComponent implements OnInit {
 
   async ngOnInit() {
     if (await this.service.init()) {
-      console.log(this.meta);
       this.isLoading = false;
 
       this.cdRef.detectChanges();
@@ -46,18 +46,23 @@ export class PasswordComponent implements OnInit {
     this.isShowPassword = checked;
   }
 
-  async onClickNewFile(elInput: HTMLInputElement) {
-    await this.service.createFile(elInput.value);
-
-    this.cdRef.detectChanges();
+  async onClickSelectFile() {
+    this.dialog
+      .open(SelectFileDialogComponent, this.getDialogConfig())
+      .afterClosed()
+      .subscribe((result) => {
+        this.service.init();
+      });
   }
 
   async onClickAddPassword() {
-    this.dialog.open(DetailDialogComponent, {});
-    //   .afterClosed()
-    //   .subscribe((result) => {
-    //     this.cdRef.detectChanges();
-    //   });
+    this.dialog
+      .open(DetailDialogComponent, this.getDialogConfig())
+      .afterClosed()
+      .subscribe((result) => {
+        console.log('add end');
+        this.cdRef.detectChanges();
+      });
   }
 
   onClickRemoveSelectInfo() {
@@ -83,12 +88,15 @@ export class PasswordComponent implements OnInit {
 
   onClickEdit(index: number) {
     this.dialog
-      .open(DetailDialogComponent, {
-        data: {
-          index,
-          info: this.passwords[index],
-        } as DetailDialogData,
-      })
+      .open(
+        DetailDialogComponent,
+        this.getDialogConfig({
+          data: {
+            index,
+            info: this.passwords[index],
+          } as DetailDialogData,
+        })
+      )
       .afterClosed()
       .subscribe((result) => {
         this.cdRef.detectChanges();
@@ -103,5 +111,18 @@ export class PasswordComponent implements OnInit {
     }
 
     this.service.deletePassword(index);
+  }
+
+  private getDialogConfig(src?: MatDialogConfig) {
+    return Object.assign(
+      {
+        width: '400px',
+        maxWidth: '98%',
+        maxHeight: '70vh',
+        autoFocus: false,
+        disableClose: false,
+      } as MatDialogConfig,
+      src
+    );
   }
 }

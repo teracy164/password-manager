@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SelectFileDialogModule } from './select-file-dialog/select-file-dialog.module';
 
 @NgModule({
   declarations: [PasswordComponent],
@@ -18,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CommonModule,
     FormsModule,
     DetailDialogModule,
+    SelectFileDialogModule,
     MatButtonModule,
     MatInputModule,
     MatCheckboxModule,

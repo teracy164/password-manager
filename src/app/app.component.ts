@@ -4,6 +4,7 @@ import { GoogleApiService } from './shared/google-api.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   /**
@@ -32,12 +33,5 @@ export class AppComponent implements OnInit {
       // 画面更新
       this.cdRef.detectChanges();
     });
-  }
-
-  onClickSignIn() {
-    this.googleapi.signIn();
-  }
-  onClickSignOut() {
-    this.googleapi.signOut();
   }
 }

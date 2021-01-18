@@ -28,7 +28,11 @@ export class GoogleDriveApiService {
   async getFiles(): Promise<FileMetaInfo[]> {
     try {
       const result = await this.drive.files.list({
-        pageSize: 10,
+        pageSize: 100,
+        trashed: false,
+        q:
+          "mimeType='application/vnd.google-apps.document' and trashed = false",
+        spaces: 'drive',
         fields: 'nextPageToken, files(id, kind, name, mimeType)',
       });
       if (result.status === 200) {

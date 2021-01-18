@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>
+  <span *ngIf="isNewFile; else listHeader">Create New File</span>
+  <ng-template #listHeader> Password File Select </ng-template>
+</h2>
+<mat-dialog-content class="mat-typography">
+  <div *ngIf="isNewFile; else list" [formGroup]="form">
+    <mat-form-field class="example-form-field" style="width: 100%">
+      <mat-label>File Name</mat-label>
+      <input matInput type="text" formControlName="fileName" />
+    </mat-form-field>
+  </div>
+  <ng-template #list>
+    <ul *ngIf="files">
+      <li *ngFor="let file of files">
+        <a (click)="onSelectFile(file)">
+          <mat-icon>{{ isFolder(file) ? "folder" : "text_snippet" }}</mat-icon>
+          {{ file.name }}
+        </a>
+      </li>
+    </ul>
+  </ng-template>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <div *ngIf="isNewFile; else listFooter" style="text-align: right">
+    <button mat-button (click)="form = null">back</button>
+    <button mat-raised-button color="primary" (click)="onClickCreateFile()">
+      create file
+    </button>
+  </div>
+  <ng-template #listFooter>
+    <button mat-button (click)="dialogRef.close()">close</button>
+    <button mat-raised-button color="primary" (click)="onClickNewFile()">
+      new file
+    </button>
+  </ng-template>
+</mat-dialog-actions>
