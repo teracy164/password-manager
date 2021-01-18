@@ -1,16 +1,25 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Password } from 'src/types/file';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  DetailDialogComponent,
+  DetailDialogData,
+} from './detail-dialog/detail-dialog.component';
 import { PasswordService } from './password.service';
 
 @Component({
   selector: 'app-password',
   templateUrl: './password.component.html',
+  styleUrls: ['./password.component.scss'],
 })
 export class PasswordComponent implements OnInit {
   isLoading = true;
+  isShowPassword = false;
 
   constructor(
     private service: PasswordService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -33,29 +42,66 @@ export class PasswordComponent implements OnInit {
     }
   }
 
+  onChangeShowPassword(checked: boolean) {
+    this.isShowPassword = checked;
+  }
+
   async onClickNewFile(elInput: HTMLInputElement) {
     await this.service.createFile(elInput.value);
 
     this.cdRef.detectChanges();
   }
 
-  async onClickAddPassword(
-    elInputName: HTMLInputElement,
-    elInputPassword: HTMLInputElement
-  ) {
-    const info: Password = {
-      name: elInputName.value,
-      description: '',
-      password: elInputPassword.value,
-      url: '',
-    };
-    await this.service.updateFile(this.meta.id, info);
-
-    this.cdRef.detectChanges();
+  async onClickAddPassword() {
+    this.dialog.open(DetailDialogComponent, {});
+    //   .afterClosed()
+    //   .subscribe((result) => {
+    //     this.cdRef.detectChanges();
+    //   });
   }
 
   onClickRemoveSelectInfo() {
     this.service.removeFileInfo();
     this.cdRef.detectChanges();
+  }
+
+  onClickCopy(index: number) {
+    const text = document.createElement('textarea');
+    text.style.height = '0px';
+    text.value = this.passwords[index].password;
+    document.body.appendChild(text);
+    text.select();
+    document.execCommand('copy');
+    text.remove();
+
+    this.snackBar.open('copy to clipboard', null, {
+      duration: 3000,
+      verticalPosition: 'bottom',
+      horizontalPosition: 'center',
+    });
+  }
+
+  onClickEdit(index: number) {
+    this.dialog
+      .open(DetailDialogComponent, {
+        data: {
+          index,
+          info: this.passwords[index],
+        } as DetailDialogData,
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        this.cdRef.detectChanges();
+      });
+  }
+  onClickDelete(index: number) {
+    const target = this.passwords[index];
+    if (
+      !confirm(`${target.name}を削除して良いですか？¥n削除すると元に戻せません`)
+    ) {
+      return;
+    }
+
+    this.service.deletePassword(index);
   }
 }

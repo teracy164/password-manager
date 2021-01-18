@@ -6,8 +6,7 @@ import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
 import { PasswordModule } from './password/password.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
+import { HeaderModule } from './shared/components/header/header.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,10 +14,9 @@ import { MatButtonModule } from '@angular/material/button';
     BrowserModule,
     AppRoutingModule,
     CommonModule,
+    HeaderModule,
     PasswordModule,
     BrowserAnimationsModule,
-    MatButtonModule,
-    MatToolbarModule,
   ],
   bootstrap: [AppComponent],
 })

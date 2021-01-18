@@ -41,11 +41,26 @@ export class PasswordService {
     return result;
   }
 
-  async updateFile(fileId: string, password: Password) {
+  async addPassword(password: Password) {
     const passwords = [...(this.passwords || []), password];
-    console.log(passwords);
+    return this.updateFile(passwords);
+  }
+
+  async updatePassword(index: number, password: Password) {
+    const passwords = [...this.passwords];
+    passwords.splice(index, 1, password);
+    return this.updateFile(passwords);
+  }
+
+  async deletePassword(index: number) {
+    const passwords = [...this.passwords];
+    passwords.splice(index, 1);
+    return this.updateFile(passwords);
+  }
+
+  private async updateFile(passwords: Password[]) {
     const result = await this.drive.updatePasswordFile(
-      fileId,
+      this.selected.id,
       passwords,
       this.key
     );
