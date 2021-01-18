@@ -116,9 +116,7 @@ export class PasswordComponent implements OnInit {
   private getDialogConfig(src?: MatDialogConfig) {
     return Object.assign(
       {
-        width: '400px',
-        maxWidth: '98%',
-        maxHeight: '70vh',
+        panelClass: 'my-dialog',
         autoFocus: false,
         disableClose: false,
       } as MatDialogConfig,

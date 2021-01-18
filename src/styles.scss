@@ -9,3 +9,40 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: rgb(240, 240, 240);
 }
+
+.my-dialog {
+  width: 400px !important;
+  max-width: 98% !important;
+  max-height: 70vh !important;
+
+  .mat-dialog-container {
+    padding: 0;
+    overflow: hidden;
+
+    .mat-dialog-title {
+      padding: 0px;
+      height: 30px;
+      margin: 10px;
+    }
+    .mat-dialog-content {
+      padding: 0 15px;
+      margin: 0;
+      max-height: calc(70vh - 110px);
+      overflow-y: auto;
+    }
+    .mat-dialog-actions {
+      border-top: 1px solid lightgray;
+      padding: 0px;
+      margin: 10px 10px 0 10px;
+      height: 50px;
+    }
+  }
+}
+
+.mat-icon-button {
+  color: rgb(100, 100, 200);
+
+  &.danger {
+    color: orange;
+  }
+}
