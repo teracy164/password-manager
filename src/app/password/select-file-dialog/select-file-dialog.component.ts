@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { GoogleDriveApiService } from 'src/app/shared/google-drive-api.service';
@@ -13,11 +13,13 @@ import { PasswordService } from '../password.service';
 export class SelectFileDialogComponent implements OnInit {
   files: FileMetaInfo[];
   form: FormGroup;
+  isProc = false;
 
   constructor(
     public dialogRef: MatDialogRef<SelectFileDialogComponent>,
     private service: PasswordService,
-    private drive: GoogleDriveApiService
+    private drive: GoogleDriveApiService,
+    private ngZone: NgZone
   ) {}
 
   get isNewFile() {
@@ -32,9 +34,14 @@ export class SelectFileDialogComponent implements OnInit {
     this.files = await this.drive.getFiles();
   }
 
-  async onSelectFile(file: FileMetaInfo) {
-    await this.service.selectFile(file);
-    this.dialogRef.close();
+  onSelectFile(file: FileMetaInfo) {
+    this.isProc = true;
+    this.ngZone.run(async () => {
+      await this.service.selectFile(file);
+      this.dialogRef.close();
+
+      this.isProc = false;
+    });
   }
 
   async onClickNewFile() {
@@ -43,16 +50,23 @@ export class SelectFileDialogComponent implements OnInit {
     });
   }
 
-  async onClickCreateFile() {
+  onClickCreateFile() {
     if (this.form.invalid) {
       alert('input error');
       return;
     }
 
-    const fileName = this.form.get('fileName').value;
-    const result = await this.service.createFile(fileName);
-    if (result) {
-      this.dialogRef.close(result);
-    }
+    this.isProc = true;
+
+    this.ngZone.run(async () => {
+      const fileName = this.form.get('fileName').value;
+      const result = await this.service.createFile(fileName);
+      if (result) {
+        this.dialogRef.close(result);
+      } else {
+        alert('create file failure.');
+      }
+      this.isProc = false;
+    });
   }
 }

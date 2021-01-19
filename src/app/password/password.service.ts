@@ -17,12 +17,17 @@ export class PasswordService {
 
   async init() {
     try {
-      this.selected = this.storage.getPasswordFileInfo();
-      if (this.selected) {
-        this.passwords = await this.drive.getPasswordFile(
-          this.selected.id,
-          this.key
-        );
+      const last = this.storage.getPasswordFileInfo();
+      if (last) {
+        this.selected = await this.drive.getFile(last.id);
+        if (this.selected) {
+          this.passwords = await this.drive.getPasswordFile(
+            this.selected.id,
+            this.key
+          );
+        } else {
+          throw new Error('file not found.');
+        }
       }
       return true;
     } catch (err) {

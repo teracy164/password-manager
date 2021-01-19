@@ -30,7 +30,12 @@
   </div>
   <ng-template #listFooter>
     <button mat-button (click)="dialogRef.close()">close</button>
-    <button mat-raised-button color="primary" (click)="onClickNewFile()">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onClickNewFile()"
+      [disabled]="isProc"
+    >
       new file
     </button>
   </ng-template>

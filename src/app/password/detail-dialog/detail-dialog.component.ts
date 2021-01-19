@@ -22,12 +22,12 @@ export interface DetailDialogData {
 })
 export class DetailDialogComponent implements OnInit {
   form: FormGroup;
+  isProc = false;
 
   constructor(
     public dialogRef: MatDialogRef<DetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DetailDialogData,
     private service: PasswordService,
-    private cdRef: ChangeDetectorRef,
     private ngZone: NgZone
   ) {}
 
@@ -40,7 +40,6 @@ export class DetailDialogComponent implements OnInit {
       password: new FormControl(null, [Validators.required]),
     });
 
-    console.log(this.data);
     if (this.data?.info) {
       Object.keys(this.data.info).forEach((key) =>
         this.form.get(key)?.reset(this.data.info[key])
@@ -48,19 +47,24 @@ export class DetailDialogComponent implements OnInit {
     }
   }
 
-  async onClickSave() {
+  onClickSave() {
     if (this.form.invalid) {
       alert('input error');
       return;
     }
 
-    const data = this.form.value as Password;
-    const result = await this.update(data);
-    if (result) {
-      this.dialogRef.close();
-    } else {
-      alert('failure.');
-    }
+    this.isProc = true;
+
+    this.ngZone.run(async () => {
+      const data = this.form.value as Password;
+      const result = await this.update(data);
+      if (result) {
+        this.dialogRef.close();
+      } else {
+        alert('failure.');
+      }
+      this.isProc = false;
+    });
   }
 
   async update(password: Password) {

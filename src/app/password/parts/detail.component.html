@@ -1,0 +1,45 @@
+<div class="password">
+  <div fxLayout="row">
+    <div fxFlex>
+      <h3 class="name">
+        <a
+          *ngIf="password.url; else noLinkTitle"
+          target="_blank"
+          [href]="password.url"
+        >
+          {{ password.name }}
+        </a>
+        <ng-template #noLinkTitle>{{ password.name }}</ng-template>
+      </h3>
+      <p *ngIf="password.description" class="description">
+        {{ password.description }}
+      </p>
+    </div>
+    <div class="btn-area" fxFlex="80px">
+      <button mat-icon-button (click)="onClickEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button class="danger" (click)="onClickDelete()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div
+    fxLayout="row"
+    fxLayout.lt-sm="column"
+    fxLayoutAlign="start center"
+    fxLayoutAlign.lt-sm="start"
+  >
+    <div *ngIf="password.loginId" class="badge-item" fxFlex="1 1">
+      <div class="badge">ID</div>
+      {{ password.loginId }}
+    </div>
+    <div class="badge-item pw" fxFlex="1 1">
+      <div class="badge">PW</div>
+      <span style="position: relative" (click)="onClickCopy()">
+        {{ isShowPassword ? password.password : "●●●●●●●●●●●●●●●●●●●●" }}
+        <mat-icon style="position: absolute; left: 100%">file_copy</mat-icon>
+      </span>
+    </div>
+  </div>
+</div>

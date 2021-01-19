@@ -51,6 +51,20 @@ export class GoogleDriveApiService {
     }
   }
 
+  async getFile(fileId: string): Promise<FileMetaInfo> {
+    try {
+      const result = await this.drive.files.get({ fileId });
+      if (result.status === 200) {
+        return result.result;
+      } else {
+        throw new Error('get file failed.');
+      }
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+
   async getFileContents(options: {
     fileId: string;
     mimeType?: string;
