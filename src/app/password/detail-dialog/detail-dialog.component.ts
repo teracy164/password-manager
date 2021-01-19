@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  NgZone,
+  OnInit,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Password } from 'src/types/file';
@@ -21,7 +27,8 @@ export class DetailDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<DetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DetailDialogData,
     private service: PasswordService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit() {
@@ -60,5 +67,11 @@ export class DetailDialogComponent implements OnInit {
     return this.data
       ? this.service.updatePassword(this.data.index, password)
       : this.service.addPassword(password);
+  }
+
+  onClickClose() {
+    this.ngZone.run(() => {
+      this.dialogRef.close();
+    });
   }
 }
