@@ -12,6 +12,7 @@ import { SelectFileDialogComponent } from './select-file-dialog/select-file-dial
 })
 export class PasswordComponent implements OnInit {
   isLoading = true;
+  isShowLoginId = false;
   isShowPassword = false;
   search = {
     keyword: '',
@@ -60,6 +61,12 @@ export class PasswordComponent implements OnInit {
     } else {
       alert('ファイルの読み込みに失敗しました');
     }
+  }
+
+  onChangeShowLoginId(checked: boolean) {
+    this.ngZone.run(() => {
+      this.isShowLoginId = checked;
+    });
   }
 
   onChangeShowPassword(checked: boolean) {

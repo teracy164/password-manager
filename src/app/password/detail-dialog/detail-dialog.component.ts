@@ -146,7 +146,7 @@ export class DetailDialogComponent implements OnInit {
   }
 
   private addTag(tag: string) {
-    if (!tag.trim()) {
+    if (!tag?.trim()) {
       return;
     }
 

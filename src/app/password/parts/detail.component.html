@@ -25,15 +25,23 @@
     fxLayoutAlign="start center"
     fxLayoutAlign.lt-sm="start"
   >
-    <div *ngIf="password.loginId" class="badge-item" fxFlex="1 1">
+    <div
+      *ngIf="password.loginId"
+      class="badge-item"
+      fxFlex="1 1"
+      (click)="onClickCopyLoginId($event)"
+    >
       <div class="badge">ID</div>
-      {{ password.loginId }}
+      <span>
+        {{ isShowLoginId ? password.loginId : "●●●●●●●●●●" }}
+        <mat-icon>file_copy</mat-icon>
+      </span>
     </div>
     <div class="badge-item pw" fxFlex="1 1">
       <div class="badge">PW</div>
-      <span style="position: relative" (click)="onClickCopy($event)">
-        {{ isShowPassword ? password.password : "●●●●●●●●●●●●●●●●●●●●" }}
-        <mat-icon style="position: absolute; left: 100%">file_copy</mat-icon>
+      <span (click)="onClickCopyPassword($event)">
+        {{ isShowPassword ? password.password : "●●●●●●●●●●" }}
+        <mat-icon>file_copy</mat-icon>
       </span>
     </div>
   </div>

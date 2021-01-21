@@ -24,20 +24,22 @@
     display: flex;
     align-items: center;
     margin-bottom: 2px;
+    position: relative;
+
     .badge {
-      display: flex;
-      justify-content: center;
       width: 25px;
       margin-right: 5px;
     }
-    &.pw {
-      span {
-        cursor: pointer;
-      }
+    span {
+      position: relative;
+
       mat-icon {
         width: 16px;
         height: 16px;
         font-size: 16px;
+        position: absolute;
+        left: calc(100% + 3px);
+        top: 2px;
       }
     }
   }

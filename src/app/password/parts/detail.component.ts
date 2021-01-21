@@ -16,6 +16,7 @@ import {
 export class PasswordDetailComponent {
   @Input() index: number;
   @Input() password: Password;
+  @Input() isShowLoginId: boolean = false;
   @Input() isShowPassword: boolean = false;
 
   constructor(
@@ -24,14 +25,22 @@ export class PasswordDetailComponent {
     private ngZone: NgZone
   ) {}
 
-  onClickCopy(event: Event) {
-    const text = document.createElement('textarea');
-    text.style.height = '0px';
-    text.value = this.password.password;
-    document.body.appendChild(text);
-    text.select();
+  onClickCopyLoginId(event: Event) {
+    this.copy(event, this.password.loginId);
+  }
+
+  onClickCopyPassword(event: Event) {
+    this.copy(event, this.password.password);
+  }
+
+  private copy(event: Event, text: string) {
+    const tmpElement = document.createElement('textarea');
+    tmpElement.style.height = '0px';
+    tmpElement.value = text;
+    document.body.appendChild(tmpElement);
+    tmpElement.select();
     document.execCommand('copy');
-    text.remove();
+    tmpElement.remove();
 
     // コピー時は詳細ダイアログが開かないように親要素へのイベント伝搬を止める
     event.stopImmediatePropagation();
