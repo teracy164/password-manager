@@ -9,8 +9,20 @@
     </div>
     <div>
       <mat-form-field>
+        <mat-label>Login ID</mat-label>
+        <input matInput formControlName="loginId" />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
         <mat-label>Password*</mat-label>
         <input matInput formControlName="password" type="password" />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Site Url</mat-label>
+        <input matInput formControlName="url" />
       </mat-form-field>
     </div>
     <div>
@@ -20,15 +32,36 @@
       </mat-form-field>
     </div>
     <div>
-      <mat-form-field>
-        <mat-label>Url</mat-label>
-        <input matInput formControlName="url" />
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field>
-        <mat-label>Login ID</mat-label>
-        <input matInput formControlName="loginId" />
+      <mat-form-field class="example-chip-list">
+        <mat-label>Tags</mat-label>
+        <mat-chip-list #chipList aria-label="Fruit selection">
+          <mat-chip
+            *ngFor="let tag of selectedTags"
+            [selectable]="selectable"
+            [removable]="true"
+            (removed)="onRemoveTag(tag)"
+          >
+            {{ tag }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="input tag..."
+            #inputTag
+            [formControl]="ctrlTag"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="onAddTag($event)"
+          />
+        </mat-chip-list>
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          (optionSelected)="onSelectedTag($event)"
+        >
+          <mat-option *ngFor="let tag of allTags" [value]="tag">
+            {{ tag }}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
     </div>
   </div>

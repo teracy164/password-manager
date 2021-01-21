@@ -1,11 +1,7 @@
 import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { DIALOG_CONFIG_DEFAULT } from '../shared/constants/dialog.constant';
-import {
-  DetailDialogComponent,
-  DetailDialogData,
-} from './detail-dialog/detail-dialog.component';
+import { DetailDialogComponent } from './detail-dialog/detail-dialog.component';
 import { PasswordService } from './password.service';
 import { SelectFileDialogComponent } from './select-file-dialog/select-file-dialog.component';
 
@@ -17,11 +13,13 @@ import { SelectFileDialogComponent } from './select-file-dialog/select-file-dial
 export class PasswordComponent implements OnInit {
   isLoading = true;
   isShowPassword = false;
+  search = {
+    keyword: '',
+  };
 
   constructor(
     private service: PasswordService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone
   ) {}
@@ -31,7 +29,21 @@ export class PasswordComponent implements OnInit {
   }
 
   get passwords() {
-    return this.service.passwords;
+    return this.service.passwords.filter((password) => {
+      if (this.search.keyword) {
+        if (password.name.includes(this.search.keyword)) {
+          return true;
+        }
+        if (password.description?.includes(this.search.keyword)) {
+          return true;
+        }
+        if (password.tags?.some((tag) => tag.includes(this.search.keyword))) {
+          return true;
+        }
+        return false;
+      }
+      return true;
+    });
   }
 
   get selectedFileName() {
@@ -54,6 +66,11 @@ export class PasswordComponent implements OnInit {
     this.ngZone.run(() => {
       this.isShowPassword = checked;
     });
+  }
+
+  onChangeKeyword(event) {
+    this.search.keyword = event.target.value;
+    this.cdRef.detectChanges();
   }
 
   async onClickSelectFile() {

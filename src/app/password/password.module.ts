@@ -12,6 +12,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SelectFileDialogModule } from './select-file-dialog/select-file-dialog.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { PasswordDetailModule } from './parts/detail.module';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [PasswordComponent],
@@ -25,6 +26,7 @@ import { PasswordDetailModule } from './parts/detail.module';
     MatCheckboxModule,
     MatIconModule,
     MatSnackBarModule,
+    MatInputModule,
   ],
   providers: [PasswordService, GoogleDriveApiService, StorageService],
   exports: [PasswordComponent],

@@ -7,6 +7,7 @@ import { StorageService } from '../shared/storage.service';
 export class PasswordService {
   selected: FileMetaInfo;
   passwords: Password[];
+  tags: string[];
 
   key: string = 'test';
 
@@ -21,10 +22,11 @@ export class PasswordService {
       if (last) {
         this.selected = await this.drive.getFile(last.id);
         if (this.selected) {
-          this.passwords = await this.drive.getPasswordFile(
+          const passwords = await this.drive.getPasswordFile(
             this.selected.id,
             this.key
           );
+          this.setPasswordInfo(passwords);
         } else {
           throw new Error('file not found.');
         }
@@ -36,8 +38,18 @@ export class PasswordService {
     }
   }
 
+  private setPasswordInfo(passwords: Password[]) {
+    this.passwords = passwords;
+    this.tags = passwords.reduce(
+      (result, pw) => result.concat(pw.tags || []),
+      []
+    );
+  }
+
   async selectFile(file: FileMetaInfo) {
-    this.passwords = await this.drive.getPasswordFile(file.id, this.key);
+    const passwords = await this.drive.getPasswordFile(file.id, this.key);
+    this.setPasswordInfo(passwords);
+
     this.storage.setPasswordFileInfo(file);
   }
 
@@ -75,7 +87,7 @@ export class PasswordService {
       this.key
     );
     if (result) {
-      this.passwords = passwords;
+      this.setPasswordInfo(passwords);
     }
     return result;
   }

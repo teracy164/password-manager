@@ -65,4 +65,11 @@ export class PasswordDetailComponent {
 
     this.service.deletePassword(this.index);
   }
+
+  private createPassword() {
+    const lowerAlpha = 'abcdefghijklmnopqrstuvwxyz';
+    const upperAlpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const number = '0123456789';
+    const symbol = '!#$%&=~/*-+';
+  }
 }

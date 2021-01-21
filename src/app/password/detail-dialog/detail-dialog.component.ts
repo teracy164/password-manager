@@ -1,14 +1,19 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Inject,
   NgZone,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Password } from 'src/types/file';
 import { PasswordService } from '../password.service';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 export interface DetailDialogData {
   index: number;
@@ -23,6 +28,15 @@ export interface DetailDialogData {
 export class DetailDialogComponent implements OnInit {
   form: FormGroup;
   isProc = false;
+  selectedTags: string[] = [];
+  ctrlTag = new FormControl(null, []);
+  @ViewChild('inputTag') inputTag: ElementRef;
+
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  get allTags() {
+    return this.service.tags;
+  }
 
   constructor(
     public dialogRef: MatDialogRef<DetailDialogComponent>,
@@ -41,9 +55,13 @@ export class DetailDialogComponent implements OnInit {
     });
 
     if (this.data?.info) {
-      Object.keys(this.data.info).forEach((key) =>
-        this.form.get(key)?.reset(this.data.info[key])
-      );
+      Object.keys(this.data.info).forEach((key) => {
+        if (key === 'tags') {
+          this.selectedTags = [...this.data.info[key]];
+        } else {
+          this.form.get(key)?.reset(this.data.info[key]);
+        }
+      });
     }
   }
 
@@ -56,7 +74,12 @@ export class DetailDialogComponent implements OnInit {
     this.isProc = true;
 
     this.ngZone.run(async () => {
+      // 確定してないタグがある場合は追加する
+      this.addTag(this.ctrlTag.value);
+
       const data = this.form.value as Password;
+      data.tags = this.selectedTags;
+
       const result = await this.update(data);
       if (result) {
         this.dialogRef.close();
@@ -76,6 +99,36 @@ export class DetailDialogComponent implements OnInit {
   onClickClose() {
     this.ngZone.run(() => {
       this.dialogRef.close();
+    });
+  }
+
+  onRemoveTag(tag: string) {
+    const index = this.selectedTags.findIndex((t) => t === tag);
+    if (index >= 0) {
+      this.ngZone.run(() => {
+        this.selectedTags.splice(index, 1);
+      });
+    }
+  }
+
+  onAddTag(event: MatChipInputEvent): void {
+    const tag = event.value.trim();
+    if (!tag) {
+      return;
+    }
+    this.addTag(tag);
+  }
+
+  onSelectedTag(event: MatAutocompleteSelectedEvent): void {
+    this.addTag(event.option.viewValue);
+  }
+
+  private addTag(tag: string) {
+    this.ngZone.run(() => {
+      this.selectedTags = Array.from(new Set(this.selectedTags.concat(tag)));
+      this.ctrlTag.reset(null);
+
+      (this.inputTag.nativeElement as HTMLInputElement).value = '';
     });
   }
 }

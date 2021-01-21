@@ -24,6 +24,9 @@
       </button>
     </div>
   </div>
+  <div class="tags">
+    <span class="tag" *ngFor="let tag of password.tags">{{ tag }}</span>
+  </div>
   <div
     fxLayout="row"
     fxLayout.lt-sm="column"
