@@ -112,11 +112,7 @@ export class DetailDialogComponent implements OnInit {
   }
 
   onAddTag(event: MatChipInputEvent): void {
-    const tag = event.value.trim();
-    if (!tag) {
-      return;
-    }
-    this.addTag(tag);
+    this.addTag(event.value);
   }
 
   onSelectedTag(event: MatAutocompleteSelectedEvent): void {
@@ -124,8 +120,14 @@ export class DetailDialogComponent implements OnInit {
   }
 
   private addTag(tag: string) {
+    if (!tag.trim()) {
+      return;
+    }
+
     this.ngZone.run(() => {
-      this.selectedTags = Array.from(new Set(this.selectedTags.concat(tag)));
+      this.selectedTags = Array.from(
+        new Set(this.selectedTags.concat(tag.trim()))
+      );
       this.ctrlTag.reset(null);
 
       (this.inputTag.nativeElement as HTMLInputElement).value = '';
