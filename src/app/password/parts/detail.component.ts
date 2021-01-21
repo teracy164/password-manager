@@ -7,7 +7,6 @@ import {
   DetailDialogComponent,
   DetailDialogData,
 } from '../detail-dialog/detail-dialog.component';
-import { PasswordService } from '../password.service';
 
 @Component({
   selector: 'app-password-detail',
@@ -20,13 +19,12 @@ export class PasswordDetailComponent {
   @Input() isShowPassword: boolean = false;
 
   constructor(
-    private service: PasswordService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private ngZone: NgZone
   ) {}
 
-  onClickCopy() {
+  onClickCopy(event: Event) {
     const text = document.createElement('textarea');
     text.style.height = '0px';
     text.value = this.password.password;
@@ -34,6 +32,9 @@ export class PasswordDetailComponent {
     text.select();
     document.execCommand('copy');
     text.remove();
+
+    // コピー時は詳細ダイアログが開かないように親要素へのイベント伝搬を止める
+    event.stopImmediatePropagation();
 
     this.ngZone.run(() => {
       this.snackBar.open('copy to clipboard', null, {
@@ -45,31 +46,16 @@ export class PasswordDetailComponent {
   }
 
   onClickEdit() {
-    this.dialog.open(
-      DetailDialogComponent,
-      Object.assign({}, DIALOG_CONFIG_DEFAULT, {
-        data: {
-          index: this.index,
-          info: this.password,
-        } as DetailDialogData,
-      })
-    );
-  }
-  onClickDelete() {
-    const target = this.password;
-    if (
-      !confirm(`${target.name}を削除して良いですか？¥n削除すると元に戻せません`)
-    ) {
-      return;
-    }
-
-    this.service.deletePassword(this.index);
-  }
-
-  private createPassword() {
-    const lowerAlpha = 'abcdefghijklmnopqrstuvwxyz';
-    const upperAlpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const number = '0123456789';
-    const symbol = '!#$%&=~/*-+';
+    this.ngZone.run(() => {
+      this.dialog.open(
+        DetailDialogComponent,
+        Object.assign({}, DIALOG_CONFIG_DEFAULT, {
+          data: {
+            index: this.index,
+            info: this.password,
+          } as DetailDialogData,
+        })
+      );
+    });
   }
 }

@@ -1,4 +1,4 @@
-<div class="password">
+<div class="password" (click)="onClickEdit()">
   <div fxLayout="row">
     <div fxFlex>
       <h3 class="name">
@@ -14,14 +14,6 @@
       <p *ngIf="password.description" class="description">
         {{ password.description }}
       </p>
-    </div>
-    <div class="btn-area" fxFlex="80px">
-      <button mat-icon-button (click)="onClickEdit()">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button class="danger" (click)="onClickDelete()">
-        <mat-icon>delete</mat-icon>
-      </button>
     </div>
   </div>
   <div class="tags">
@@ -39,7 +31,7 @@
     </div>
     <div class="badge-item pw" fxFlex="1 1">
       <div class="badge">PW</div>
-      <span style="position: relative" (click)="onClickCopy()">
+      <span style="position: relative" (click)="onClickCopy($event)">
         {{ isShowPassword ? password.password : "●●●●●●●●●●●●●●●●●●●●" }}
         <mat-icon style="position: absolute; left: 100%">file_copy</mat-icon>
       </span>

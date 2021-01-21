@@ -67,13 +67,25 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onClickClose()">close</button>
-  <button
-    mat-raised-button
-    color="primary"
-    (click)="onClickSave()"
-    [disabled]="isProc"
-  >
-    save
-  </button>
+  <div class="footer">
+    <button
+      *ngIf="isEdit"
+      mat-raised-button
+      color="warn"
+      (click)="onClickDelete()"
+      [disabled]="isProc"
+    >
+      delete
+    </button>
+    <div class="spacer"></div>
+    <button mat-button (click)="onClickClose()">close</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onClickSave()"
+      [disabled]="isProc"
+    >
+      save
+    </button>
+  </div>
 </mat-dialog-actions>

@@ -97,4 +97,11 @@ export class PasswordService {
     this.selected = null;
     this.passwords = null;
   }
+
+  private createPassword() {
+    const lowerAlpha = 'abcdefghijklmnopqrstuvwxyz';
+    const upperAlpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const number = '0123456789';
+    const symbol = '!#$%&=~/*-+';
+  }
 }

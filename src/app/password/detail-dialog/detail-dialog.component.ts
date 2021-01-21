@@ -38,6 +38,10 @@ export class DetailDialogComponent implements OnInit {
     return this.service.tags;
   }
 
+  get isEdit() {
+    return this.data?.info;
+  }
+
   constructor(
     public dialogRef: MatDialogRef<DetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DetailDialogData,
@@ -57,7 +61,9 @@ export class DetailDialogComponent implements OnInit {
     if (this.data?.info) {
       Object.keys(this.data.info).forEach((key) => {
         if (key === 'tags') {
-          this.selectedTags = [...this.data.info[key]];
+          if (this.data.info[key]?.length) {
+            this.selectedTags = [...this.data.info[key]];
+          }
         } else {
           this.form.get(key)?.reset(this.data.info[key]);
         }
@@ -91,12 +97,32 @@ export class DetailDialogComponent implements OnInit {
   }
 
   async update(password: Password) {
-    return this.data
+    return this.isEdit
       ? this.service.updatePassword(this.data.index, password)
       : this.service.addPassword(password);
   }
 
+  async onClickDelete() {
+    this.isProc = true;
+    const target = this.data.info;
+    if (
+      !confirm(`${target.name}を削除して良いですか？¥n削除すると元に戻せません`)
+    ) {
+      this.isProc = false;
+      return;
+    }
+
+    await this.service.deletePassword(this.data.index);
+    this.isProc = false;
+
+    this.close();
+  }
+
   onClickClose() {
+    this.close();
+  }
+
+  private close() {
     this.ngZone.run(() => {
       this.dialogRef.close();
     });

@@ -1,3 +1,16 @@
 mat-form-field {
   width: 100%;
 }
+
+.footer {
+  display: flex;
+  width: 100%;
+
+  button {
+    flex-basis: auto;
+  }
+
+  .spacer {
+    flex-basis: 100%;
+  }
+}
