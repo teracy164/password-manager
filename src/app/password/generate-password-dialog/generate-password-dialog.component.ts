@@ -14,6 +14,7 @@ export class GeneratePasswordDialogComponent implements OnInit {
   candidates: string[];
   generateOptions: GeneratePasswordOptions;
   isShowOptions = false;
+  isCheckedAllSymbols = false;
 
   get symbols() {
     if (this.generateOptions?.use?.symbols) {
@@ -31,6 +32,9 @@ export class GeneratePasswordDialogComponent implements OnInit {
 
   ngOnInit() {
     this.generateOptions = this.storage.getGeneratePasswordOptions();
+    this.isCheckedAllSymbols = Object.keys(
+      this.generateOptions.use.symbols
+    ).every((key) => this.generateOptions.use.symbols[key]);
     this.refleshCandidate();
   }
 
@@ -60,6 +64,16 @@ export class GeneratePasswordDialogComponent implements OnInit {
   onChangeGenerateOptionForSymbol(key: string, event: MatCheckboxChange) {
     this.ngZone.run(() => {
       this.generateOptions.use.symbols[key] = event.checked;
+      this.storage.setGeneratePasswordOptions(this.generateOptions);
+    });
+  }
+
+  onChangeAllSymbols(event: MatCheckboxChange) {
+    this.ngZone.run(() => {
+      this.isCheckedAllSymbols = event.checked;
+      Object.keys(this.generateOptions.use.symbols).forEach((key) => {
+        this.generateOptions.use.symbols[key] = event.checked;
+      });
       this.storage.setGeneratePasswordOptions(this.generateOptions);
     });
   }
