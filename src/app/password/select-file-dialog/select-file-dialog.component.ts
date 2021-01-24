@@ -31,6 +31,10 @@ export class SelectFileDialogComponent implements OnInit {
     return this.form;
   }
 
+  get selectedFile() {
+    return this.service.selected;
+  }
+
   isFolder(file: FileMetaInfo) {
     return this.drive.isFolder(file);
   }
@@ -47,7 +51,7 @@ export class SelectFileDialogComponent implements OnInit {
     this.loading.start();
     this.ngZone.run(async () => {
       await this.service.selectFile(file);
-      this.dialogRef.close();
+      this.dialogRef.close(file);
 
       this.loading.end();
     });

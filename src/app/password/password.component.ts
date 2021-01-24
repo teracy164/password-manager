@@ -115,8 +115,10 @@ export class PasswordComponent implements OnInit, AfterViewInit {
     this.dialog
       .open(SelectFileDialogComponent, DIALOG_CONFIG_DEFAULT)
       .afterClosed()
-      .subscribe((result) => {
-        this.service.init();
+      .subscribe((selectedFile) => {
+        if (selectedFile) {
+          this.service.init();
+        }
       });
   }
 

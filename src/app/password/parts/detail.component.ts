@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  HostListener,
-  Input,
-  NgZone,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, Input, NgZone, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DIALOG_CONFIG_DEFAULT } from 'src/app/shared/constants/dialog.constant';
@@ -18,7 +10,7 @@ import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component'
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
 })
-export class PasswordDetailComponent implements AfterViewInit {
+export class PasswordDetailComponent {
   @Input() index: number;
   @Input() password: Password;
   @Input() isShowLoginId: boolean = false;
@@ -32,24 +24,8 @@ export class PasswordDetailComponent implements AfterViewInit {
     private ngZone: NgZone
   ) {}
 
-  ngAfterViewInit() {
-    // 幅の調整
-    this.setWidth();
-  }
-
-  private setWidth() {
-    // const padding = 10;
-    // const width = 400;
-    // const screenWidth = document.body.clientWidth - 40;
-    // const num = Math.floor(screenWidth / width);
-    // const el = this.elPasswordCard.nativeElement as HTMLDivElement;
-    // const exWidth = screenWidth - width * num;
-    // el.style.width = width + Math.floor(exWidth / num) - padding + 'px';
-  }
-
-  @HostListener('window:resize')
-  onResize() {
-    this.setWidth();
+  onClickLink(event: Event) {
+    event.stopImmediatePropagation();
   }
 
   onClickCopyLoginId(event: Event) {

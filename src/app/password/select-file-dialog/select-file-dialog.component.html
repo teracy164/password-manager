@@ -10,6 +10,7 @@
     </mat-form-field>
   </div>
   <ng-template #list>
+    <p>selected: {{ selectedFile.name }}</p>
     <ul *ngIf="files">
       <li *ngFor="let file of files">
         <a class="file" (click)="onSelectFile(file)">
@@ -24,13 +25,17 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <div *ngIf="isNewFile; else listFooter" style="text-align: right">
-    <button mat-button (click)="form = null">back</button>
-    <button mat-raised-button color="primary" (click)="onClickCreateFile()">
-      create file
-    </button>
+  <div class="footer">
+    <ng-container *ngIf="isNewFile; else listFooter">
+      <div class="spacer"></div>
+      <button mat-button (click)="form = null">back</button>
+      <button mat-raised-button color="primary" (click)="onClickCreateFile()">
+        create
+      </button>
+    </ng-container>
   </div>
   <ng-template #listFooter>
+    <div class="spacer"></div>
     <button mat-button (click)="dialogRef.close()">close</button>
     <button
       mat-raised-button
@@ -38,7 +43,7 @@
       (click)="onClickNewFile()"
       [disabled]="isProc"
     >
-      new file
+      new
     </button>
   </ng-template>
 </mat-dialog-actions>
