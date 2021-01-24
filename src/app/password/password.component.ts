@@ -6,7 +6,6 @@ import {
   NgZone,
   OnInit,
 } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { Settings } from 'src/types/settings';
 import { Loading } from '../shared/components/loading/loading.service';
@@ -127,7 +126,6 @@ export class PasswordComponent implements OnInit, AfterViewInit {
       .open(DetailDialogComponent, DIALOG_CONFIG_DEFAULT)
       .afterClosed()
       .subscribe((result) => {
-        console.log('add end');
         this.cdRef.detectChanges();
       });
   }

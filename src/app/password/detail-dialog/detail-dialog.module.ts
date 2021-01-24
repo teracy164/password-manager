@@ -8,6 +8,7 @@ import { DetailDialogComponent } from './detail-dialog.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
+import { GeneratePasswordDialogModule } from '../generate-password-dialog/generate-password-dialog.module';
 
 @NgModule({
   declarations: [DetailDialogComponent],
@@ -15,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    GeneratePasswordDialogModule,
     MatDialogModule,
     MatButtonModule,
     MatInputModule,

@@ -3,6 +3,7 @@ import { FileMetaInfo, Password } from 'src/types/file';
 import { GoogleDriveApiService } from '../shared/google-drive-api.service';
 import { StorageService } from '../shared/storage.service';
 import { v4 as uuidV4 } from 'uuid';
+import { GeneratePasswordOptions } from 'src/types/settings';
 
 @Injectable()
 export class PasswordService {
@@ -136,10 +137,60 @@ export class PasswordService {
     this.passwords = null;
   }
 
-  private createPassword() {
+  generatePassword(
+    options: GeneratePasswordOptions = {
+      length: 32,
+      use: {
+        lowerAlpha: true,
+        upperAlpha: true,
+        number: true,
+        symbols: {
+          '!': true,
+          '#': true,
+          $: true,
+          '%': true,
+          '&': true,
+          '=': true,
+          '~': true,
+          '/': true,
+          '*': true,
+          '-': true,
+          '+': true,
+          '(': true,
+          ')': true,
+          '[': true,
+          ']': true,
+        },
+      },
+    }
+  ) {
     const lowerAlpha = 'abcdefghijklmnopqrstuvwxyz';
     const upperAlpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const number = '0123456789';
-    const symbol = '!#$%&=~/*-+';
+
+    let candidate = '';
+    if (options.use.lowerAlpha) {
+      candidate += lowerAlpha;
+    }
+    if (options.use.upperAlpha) {
+      candidate += upperAlpha;
+    }
+    if (options.use.number) {
+      candidate += number;
+    }
+    if (options.use.symbols) {
+      Object.keys(options.use.symbols).forEach((symbol) => {
+        if (options.use.symbols[symbol]) {
+          candidate += symbol;
+        }
+      });
+    }
+
+    let password = '';
+    for (let i = 0; i < options.length; i++) {
+      const index = Math.floor(Math.random() * candidate.length);
+      password += candidate.charAt(index);
+    }
+    return password;
   }
 }

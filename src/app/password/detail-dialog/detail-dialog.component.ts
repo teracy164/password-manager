@@ -7,13 +7,19 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { Password } from 'src/types/file';
 import { PasswordService } from '../password.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Loading } from 'src/app/shared/components/loading/loading.service';
+import { GeneratePasswordDialogComponent } from '../generate-password-dialog/generate-password-dialog.component';
+import { DIALOG_CONFIG_DEFAULT } from 'src/app/shared/constants/dialog.constant';
 
 @Component({
   selector: 'app-password-detail-dialog',
@@ -24,6 +30,7 @@ export class DetailDialogComponent implements OnInit {
   form: FormGroup;
   selectedTags: string[] = [];
   ctrlTag = new FormControl(null, []);
+  isShowPassword = false;
   @ViewChild('inputTag') inputTag: ElementRef;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -42,6 +49,7 @@ export class DetailDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<DetailDialogComponent>,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public src: Password,
     private service: PasswordService,
     private ngZone: NgZone,
@@ -68,6 +76,12 @@ export class DetailDialogComponent implements OnInit {
         }
       });
     }
+  }
+
+  onChangeShowPassword() {
+    this.ngZone.run(() => {
+      this.isShowPassword = !this.isShowPassword;
+    });
   }
 
   onClickSave() {
@@ -113,6 +127,19 @@ export class DetailDialogComponent implements OnInit {
 
     this.loading.end();
     this.close();
+  }
+
+  onClickGeneratePassword() {
+    this.dialog
+      .open(GeneratePasswordDialogComponent, DIALOG_CONFIG_DEFAULT)
+      .afterClosed()
+      .subscribe((selectedPassword: string) => {
+        if (selectedPassword) {
+          this.ngZone.run(() => {
+            this.form.get('password').setValue(selectedPassword);
+          });
+        }
+      });
   }
 
   onClickClose() {

@@ -13,11 +13,23 @@
         <input matInput formControlName="loginId" />
       </mat-form-field>
     </div>
-    <div>
+    <div style="display: flex">
       <mat-form-field>
         <mat-label>Password*</mat-label>
-        <input matInput formControlName="password" type="password" />
+        <input
+          matInput
+          formControlName="password"
+          type="{{ isShowPassword ? 'text' : 'password' }}"
+        />
       </mat-form-field>
+      <button mat-button (click)="onChangeShowPassword()">
+        <mat-icon>{{
+          isShowPassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
+      <button mat-button style="padding: 0" (click)="onClickGeneratePassword()">
+        Generate
+      </button>
     </div>
     <div>
       <mat-form-field>
