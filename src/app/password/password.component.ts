@@ -99,12 +99,11 @@ export class PasswordComponent implements OnInit, AfterViewInit {
     if (await this.service.init()) {
       this.ngZone.run(() => {
         this.settings = this.storage.getSettings();
-
         this.loading.end();
-        this.cdRef.detectChanges();
       });
     } else {
       alert('ファイルの読み込みに失敗しました');
+      this.loading.end();
     }
   }
 
