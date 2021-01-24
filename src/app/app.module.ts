@@ -8,6 +8,8 @@ import { PasswordModule } from './password/password.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderModule } from './shared/components/header/header.module';
 import { LoadingModule } from './shared/components/loading/loading.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +21,7 @@ import { LoadingModule } from './shared/components/loading/loading.module';
     PasswordModule,
     BrowserAnimationsModule,
     LoadingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   bootstrap: [AppComponent],
 })
