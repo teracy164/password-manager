@@ -1,7 +1,12 @@
 .password {
-  padding: 5px 0;
+  padding: 5px;
   width: 400px;
   max-width: 100%;
+
+  &.mobile {
+    padding: 5px 0;
+    width: 100vw;
+  }
 
   .card {
     box-shadow: 3px 3px 6px 1px rgb(200, 200, 200);

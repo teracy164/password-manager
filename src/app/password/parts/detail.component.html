@@ -1,4 +1,4 @@
-<div class="password" #elPasswordCard>
+<div class="password" [ngClass.lt-sm]="{ mobile: true }" #elPasswordCard>
   <div class="card" (click)="onClickEdit()">
     <div class="wrapper">
       <div fxLayout="row">
