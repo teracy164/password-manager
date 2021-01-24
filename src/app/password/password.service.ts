@@ -22,6 +22,7 @@ export class PasswordService {
 
   async init() {
     try {
+      this.passwordsEachTag = { [this.noTagKey]: [] };
       const last = this.storage.getPasswordFileInfo();
       if (last) {
         this.selected = await this.drive.getFile(last.id);
