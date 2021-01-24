@@ -11,6 +11,10 @@ import { LoadingModule } from './shared/components/loading/loading.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
+const swPath = environment.production
+  ? 'password-manager/ngsw-worker.js'
+  : 'ngsw-worker.js';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -21,7 +25,7 @@ import { environment } from '../environments/environment';
     PasswordModule,
     BrowserAnimationsModule,
     LoadingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register(swPath, { enabled: environment.production }),
   ],
   bootstrap: [AppComponent],
 })
