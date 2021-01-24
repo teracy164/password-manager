@@ -1,48 +1,64 @@
-<div class="password" (click)="onClickEdit()">
-  <div fxLayout="row">
-    <div fxFlex>
-      <h3 class="name">
-        <a
-          *ngIf="password.url; else noLinkTitle"
-          target="_blank"
-          [href]="password.url"
+<div class="password" #elPasswordCard>
+  <div class="card" (click)="onClickEdit()">
+    <div class="wrapper">
+      <div fxLayout="row">
+        <div fxFlex>
+          <h3 class="name">
+            <a
+              *ngIf="password.url; else noLinkTitle"
+              target="_blank"
+              [href]="password.url"
+            >
+              {{ password.name }}
+            </a>
+            <ng-template #noLinkTitle>{{ password.name }}</ng-template>
+          </h3>
+          <p *ngIf="password.description" class="description">
+            {{ password.description }}
+          </p>
+        </div>
+      </div>
+      <!-- <div class="tags">
+        <span class="tag" *ngFor="let tag of password.tags">{{ tag }}</span>
+      </div> -->
+      <div style="text-align: right">
+        <button
+          *ngIf="password.loginId"
+          mat-raised-button
+          color="accent"
+          style="margin: 0 5px"
+          (click)="onClickCopyLoginId($event)"
         >
-          {{ password.name }}
-        </a>
-        <ng-template #noLinkTitle>{{ password.name }}</ng-template>
-      </h3>
-      <p *ngIf="password.description" class="description">
-        {{ password.description }}
-      </p>
-    </div>
-  </div>
-  <div class="tags">
-    <span class="tag" *ngFor="let tag of password.tags">{{ tag }}</span>
-  </div>
-  <div
-    fxLayout="row"
-    fxLayout.lt-sm="column"
-    fxLayoutAlign="start center"
-    fxLayoutAlign.lt-sm="start"
-  >
-    <div
-      *ngIf="password.loginId"
-      class="badge-item"
-      fxFlex="1 1"
-      (click)="onClickCopyLoginId($event)"
-    >
-      <div class="badge">ID</div>
-      <span>
-        {{ isShowLoginId ? password.loginId : "●●●●●●●●●●" }}
-        <mat-icon>file_copy</mat-icon>
-      </span>
-    </div>
-    <div class="badge-item pw" fxFlex="1 1">
-      <div class="badge">PW</div>
-      <span (click)="onClickCopyPassword($event)">
-        {{ isShowPassword ? password.password : "●●●●●●●●●●" }}
-        <mat-icon>file_copy</mat-icon>
-      </span>
+          copy ID
+        </button>
+        <button
+          mat-raised-button
+          color="accent"
+          style="margin: 0 5px"
+          (click)="onClickCopyPassword($event)"
+        >
+          copy PW
+        </button>
+        <!-- <div
+          *ngIf="password.loginId"
+          class="badge-item"
+          fxFlex="1 1"
+          (click)="onClickCopyLoginId($event)"
+        >
+          <div class="badge">ID</div>
+          <span>
+            {{ isShowLoginId ? password.loginId : "●●●●●●●●●●" }}
+            <mat-icon>file_copy</mat-icon>
+          </span>
+        </div>
+        <div class="badge-item pw" fxFlex="1 1">
+          <div class="badge">PW</div>
+          <span (click)="onClickCopyPassword($event)">
+            {{ isShowPassword ? password.password : "●●●●●●●●●●" }}
+            <mat-icon>file_copy</mat-icon>
+          </span>
+        </div> -->
+      </div>
     </div>
   </div>
 </div>

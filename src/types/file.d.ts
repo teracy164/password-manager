@@ -10,6 +10,7 @@ export interface FileMetaInfo {
 }
 
 export interface Password {
+  id: string;
   tags: string[];
   name: string;
   loginId: string;

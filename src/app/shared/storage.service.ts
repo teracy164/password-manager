@@ -1,6 +1,7 @@
 import { FileMetaInfo } from 'src/types/file';
+import { Settings } from 'src/types/settings';
 
-type KEY = 'password_file';
+type KEY = 'password_file' | 'settings';
 
 export class StorageService {
   private getItem<T>(key: KEY) {
@@ -29,5 +30,22 @@ export class StorageService {
 
   removePasswordFileInfo() {
     this.removeItem('password_file');
+  }
+
+  getSettings(): Settings {
+    const data = this.getItem<Settings>('settings');
+    if (data) {
+      return data;
+    }
+
+    return {
+      list: {
+        isShowTag: true,
+      },
+    };
+  }
+
+  setSettings(settings: Settings) {
+    this.setItem('settings', settings);
   }
 }

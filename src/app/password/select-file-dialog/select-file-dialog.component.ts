@@ -1,6 +1,7 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Loading } from 'src/app/shared/components/loading/loading.service';
 import { GoogleDriveApiService } from 'src/app/shared/google-drive-api.service';
 import { FileMetaInfo } from 'src/types/file';
 import { PasswordService } from '../password.service';
@@ -13,14 +14,18 @@ import { PasswordService } from '../password.service';
 export class SelectFileDialogComponent implements OnInit {
   files: FileMetaInfo[];
   form: FormGroup;
-  isProc = false;
 
   constructor(
     public dialogRef: MatDialogRef<SelectFileDialogComponent>,
     private service: PasswordService,
     private drive: GoogleDriveApiService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private loading: Loading
   ) {}
+
+  get isLoading() {
+    return this.loading.isLoading;
+  }
 
   get isNewFile() {
     return this.form;
@@ -31,16 +36,20 @@ export class SelectFileDialogComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.loading.start();
+
     this.files = await this.drive.getFiles();
+
+    this.loading.end();
   }
 
   onSelectFile(file: FileMetaInfo) {
-    this.isProc = true;
+    this.loading.start();
     this.ngZone.run(async () => {
       await this.service.selectFile(file);
       this.dialogRef.close();
 
-      this.isProc = false;
+      this.loading.end();
     });
   }
 
@@ -56,7 +65,7 @@ export class SelectFileDialogComponent implements OnInit {
       return;
     }
 
-    this.isProc = true;
+    this.loading.start('creating...');
 
     this.ngZone.run(async () => {
       const fileName = this.form.get('fileName').value;
@@ -66,7 +75,7 @@ export class SelectFileDialogComponent implements OnInit {
       } else {
         alert('create file failure.');
       }
-      this.isProc = false;
+      this.loading.end();
     });
   }
 }

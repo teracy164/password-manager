@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { PasswordModule } from './password/password.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderModule } from './shared/components/header/header.module';
+import { LoadingModule } from './shared/components/loading/loading.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,6 +18,7 @@ import { HeaderModule } from './shared/components/header/header.module';
     HeaderModule,
     PasswordModule,
     BrowserAnimationsModule,
+    LoadingModule,
   ],
   bootstrap: [AppComponent],
 })

@@ -1,6 +1,17 @@
-import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  NgZone,
+  OnInit,
+} from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
+import { Settings } from 'src/types/settings';
+import { Loading } from '../shared/components/loading/loading.service';
 import { DIALOG_CONFIG_DEFAULT } from '../shared/constants/dialog.constant';
+import { StorageService } from '../shared/storage.service';
 import { DetailDialogComponent } from './detail-dialog/detail-dialog.component';
 import { PasswordService } from './password.service';
 import { SelectFileDialogComponent } from './select-file-dialog/select-file-dialog.component';
@@ -10,74 +21,96 @@ import { SelectFileDialogComponent } from './select-file-dialog/select-file-dial
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.scss'],
 })
-export class PasswordComponent implements OnInit {
-  isLoading = true;
-  isShowLoginId = false;
-  isShowPassword = false;
-  search = {
-    keyword: '',
-  };
+export class PasswordComponent implements OnInit, AfterViewInit {
+  dispFileNameLength = 0;
+  settings: Settings;
 
   constructor(
     private service: PasswordService,
     private dialog: MatDialog,
     private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private storage: StorageService,
+    private loading: Loading
   ) {}
+
+  get isLoading() {
+    return this.loading.isLoading;
+  }
 
   get meta() {
     return this.service.selected;
   }
 
   get passwords() {
-    return this.service.passwords.filter((password) => {
-      if (this.search.keyword) {
-        if (password.name.includes(this.search.keyword)) {
-          return true;
-        }
-        if (password.description?.includes(this.search.keyword)) {
-          return true;
-        }
-        if (password.tags?.some((tag) => tag.includes(this.search.keyword))) {
-          return true;
-        }
-        return false;
-      }
-      return true;
-    });
+    return this.service.passwords;
+  }
+
+  get passwordsEachTag() {
+    return this.service.passwordsEachTag;
   }
 
   get selectedFileName() {
-    return this.meta.name.length > 8
-      ? this.meta.name.slice(0, 8) + '...'
+    if (this.dispFileNameLength === 0) {
+      return '';
+    }
+
+    return this.meta.name.length > this.dispFileNameLength
+      ? this.meta.name.slice(0, this.dispFileNameLength) + '...'
       : this.meta.name;
   }
 
-  async ngOnInit() {
-    if (await this.service.init()) {
-      this.isLoading = false;
+  get tagsWithNoTagKey() {
+    if (this.passwordsEachTag[this.noTagKey].length) {
+      return [...this.tags, this.noTagKey];
+    }
+    return this.tags;
+  }
 
-      this.cdRef.detectChanges();
+  get tags() {
+    return this.service.tags;
+  }
+
+  get noTagKey() {
+    return this.service.noTagKey;
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.setFileNameLength();
+  }
+
+  private setFileNameLength() {
+    let len = 0;
+    const width = window.innerWidth;
+    if (width < 400) {
+      len = 0;
+    } else {
+      len = Math.floor(width / 150) * 5;
+    }
+    if (this.dispFileNameLength !== len) {
+      this.ngZone.run(() => {
+        this.dispFileNameLength = len;
+      });
+    }
+  }
+
+  async ngOnInit() {
+    this.loading.start();
+    if (await this.service.init()) {
+      this.ngZone.run(() => {
+        this.settings = this.storage.getSettings();
+
+        this.loading.end();
+        this.cdRef.detectChanges();
+      });
     } else {
       alert('ファイルの読み込みに失敗しました');
     }
   }
 
-  onChangeShowLoginId(checked: boolean) {
-    this.ngZone.run(() => {
-      this.isShowLoginId = checked;
-    });
-  }
-
-  onChangeShowPassword(checked: boolean) {
-    this.ngZone.run(() => {
-      this.isShowPassword = checked;
-    });
-  }
-
-  onChangeKeyword(event) {
-    this.search.keyword = event.target.value;
-    this.cdRef.detectChanges();
+  ngAfterViewInit() {
+    this.setFileNameLength();
   }
 
   async onClickSelectFile() {

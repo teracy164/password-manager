@@ -73,7 +73,7 @@
       mat-raised-button
       color="warn"
       (click)="onClickDelete()"
-      [disabled]="isProc"
+      [disabled]="isLoading"
     >
       delete
     </button>
@@ -83,7 +83,7 @@
       mat-raised-button
       color="primary"
       (click)="onClickSave()"
-      [disabled]="isProc"
+      [disabled]="isLoading"
     >
       save
     </button>

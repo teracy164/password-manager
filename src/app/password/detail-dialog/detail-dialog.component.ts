@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
   Inject,
@@ -14,11 +13,7 @@ import { PasswordService } from '../password.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-
-export interface DetailDialogData {
-  index: number;
-  info: Password;
-}
+import { Loading } from 'src/app/shared/components/loading/loading.service';
 
 @Component({
   selector: 'app-password-detail-dialog',
@@ -27,7 +22,6 @@ export interface DetailDialogData {
 })
 export class DetailDialogComponent implements OnInit {
   form: FormGroup;
-  isProc = false;
   selectedTags: string[] = [];
   ctrlTag = new FormControl(null, []);
   @ViewChild('inputTag') inputTag: ElementRef;
@@ -39,14 +33,19 @@ export class DetailDialogComponent implements OnInit {
   }
 
   get isEdit() {
-    return this.data?.info;
+    return this.src ? true : false;
+  }
+
+  get isLoading() {
+    return this.loading.isLoading;
   }
 
   constructor(
     public dialogRef: MatDialogRef<DetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DetailDialogData,
+    @Inject(MAT_DIALOG_DATA) public src: Password,
     private service: PasswordService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private loading: Loading
   ) {}
 
   ngOnInit() {
@@ -58,14 +57,14 @@ export class DetailDialogComponent implements OnInit {
       password: new FormControl(null, [Validators.required]),
     });
 
-    if (this.data?.info) {
-      Object.keys(this.data.info).forEach((key) => {
+    if (this.isEdit) {
+      Object.keys(this.src).forEach((key) => {
         if (key === 'tags') {
-          if (this.data.info[key]?.length) {
-            this.selectedTags = [...this.data.info[key]];
+          if (this.src[key]?.length) {
+            this.selectedTags = [...this.src[key]];
           }
         } else {
-          this.form.get(key)?.reset(this.data.info[key]);
+          this.form.get(key)?.reset(this.src[key]);
         }
       });
     }
@@ -76,8 +75,7 @@ export class DetailDialogComponent implements OnInit {
       alert('input error');
       return;
     }
-
-    this.isProc = true;
+    this.loading.start();
 
     this.ngZone.run(async () => {
       // 確定してないタグがある場合は追加する
@@ -92,29 +90,28 @@ export class DetailDialogComponent implements OnInit {
       } else {
         alert('failure.');
       }
-      this.isProc = false;
+      this.loading.end();
     });
   }
 
   async update(password: Password) {
     return this.isEdit
-      ? this.service.updatePassword(this.data.index, password)
+      ? this.service.updatePassword(this.src.id, password)
       : this.service.addPassword(password);
   }
 
   async onClickDelete() {
-    this.isProc = true;
-    const target = this.data.info;
+    const target = this.src;
     if (
       !confirm(`${target.name}を削除して良いですか？¥n削除すると元に戻せません`)
     ) {
-      this.isProc = false;
       return;
     }
+    this.loading.start();
 
-    await this.service.deletePassword(this.data.index);
-    this.isProc = false;
+    await this.service.deletePassword(this.src.id);
 
+    this.loading.end();
     this.close();
   }
 

@@ -12,9 +12,11 @@
   <ng-template #list>
     <ul *ngIf="files">
       <li *ngFor="let file of files">
-        <a (click)="onSelectFile(file)">
+        <a class="file" (click)="onSelectFile(file)">
           <mat-icon>{{ isFolder(file) ? "folder" : "text_snippet" }}</mat-icon>
-          {{ file.name }}
+          <span class="file-name">
+            {{ file.name }}
+          </span>
         </a>
       </li>
     </ul>

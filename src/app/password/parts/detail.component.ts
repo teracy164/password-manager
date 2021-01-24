@@ -1,29 +1,56 @@
-import { Component, Input, NgZone } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  NgZone,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DIALOG_CONFIG_DEFAULT } from 'src/app/shared/constants/dialog.constant';
 import { Password } from 'src/types/file';
-import {
-  DetailDialogComponent,
-  DetailDialogData,
-} from '../detail-dialog/detail-dialog.component';
+import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
 
 @Component({
   selector: 'app-password-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
 })
-export class PasswordDetailComponent {
+export class PasswordDetailComponent implements AfterViewInit {
   @Input() index: number;
   @Input() password: Password;
   @Input() isShowLoginId: boolean = false;
   @Input() isShowPassword: boolean = false;
+
+  @ViewChild('elPasswordCard') elPasswordCard: ElementRef;
 
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private ngZone: NgZone
   ) {}
+
+  ngAfterViewInit() {
+    // 幅の調整
+    this.setWidth();
+  }
+
+  private setWidth() {
+    // const padding = 10;
+    // const width = 400;
+    // const screenWidth = document.body.clientWidth - 40;
+    // const num = Math.floor(screenWidth / width);
+    // const el = this.elPasswordCard.nativeElement as HTMLDivElement;
+    // const exWidth = screenWidth - width * num;
+    // el.style.width = width + Math.floor(exWidth / num) - padding + 'px';
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.setWidth();
+  }
 
   onClickCopyLoginId(event: Event) {
     this.copy(event, this.password.loginId);
@@ -59,10 +86,7 @@ export class PasswordDetailComponent {
       this.dialog.open(
         DetailDialogComponent,
         Object.assign({}, DIALOG_CONFIG_DEFAULT, {
-          data: {
-            index: this.index,
-            info: this.password,
-          } as DetailDialogData,
+          data: this.password,
         })
       );
     });
