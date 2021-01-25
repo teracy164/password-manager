@@ -23,6 +23,7 @@ import { SelectFileDialogComponent } from './select-file-dialog/select-file-dial
   styleUrls: ['./password.component.scss'],
 })
 export class PasswordComponent implements OnInit, AfterViewInit {
+  isInitializing = true;
   dispFileNameLength = 0;
   settings: Settings;
 
@@ -125,6 +126,7 @@ export class PasswordComponent implements OnInit, AfterViewInit {
       alert('ファイルの読み込みに失敗しました');
       this.loading.end();
     }
+    this.isInitializing = false;
   }
 
   ngAfterViewInit() {
