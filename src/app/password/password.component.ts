@@ -134,10 +134,14 @@ export class PasswordComponent implements OnInit, AfterViewInit {
 
   onClickTag(tag: string) {
     const element = document.getElementById(tag);
-
     if (element) {
       const parent = this.elPasswordArea.nativeElement as HTMLDivElement;
-      parent.scrollTop = element.getBoundingClientRect().top;
+      // パスワード表示領域の表示位置をオフセットとして保持
+      const offset = parent.getBoundingClientRect().top;
+      // ターゲットの表示位置（スクロールされた状態での実際の表示位置）
+      const now = element.getBoundingClientRect().top;
+      // パスワード表示領域の現在のスクロール位置からの相対的な位置情報でスクロール位置を算出
+      parent.scrollTop = parent.scrollTop + (now - offset);
     }
   }
 
