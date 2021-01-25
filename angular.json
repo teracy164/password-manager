@@ -17,6 +17,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "baseHref": "/password-manager",
+            "deployUrl": "/password-manager/",
             "outputPath": "dist/password-manager",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -42,8 +44,6 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "baseHref": "/password-manager",
-              "deployUrl": "/password-manager/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,

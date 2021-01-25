@@ -6,7 +6,6 @@ type KEY = 'password_file' | 'settings';
 export class StorageService {
   private getItem<T>(key: KEY) {
     const data = localStorage.getItem(key);
-    console.log(data, data?.length);
     if (data?.length) {
       return JSON.parse(data) as T;
     }

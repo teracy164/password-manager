@@ -11,7 +11,7 @@
 
     height: $mainHeight;
     max-height: $mainHeight;
-    overflow-y: auto;
+    overflow-y: hidden;
 
     .no-auth {
       height: 100%;

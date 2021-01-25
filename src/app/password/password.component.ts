@@ -2,9 +2,11 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   HostListener,
   NgZone,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Settings } from 'src/types/settings';
@@ -23,6 +25,9 @@ import { SelectFileDialogComponent } from './select-file-dialog/select-file-dial
 export class PasswordComponent implements OnInit, AfterViewInit {
   dispFileNameLength = 0;
   settings: Settings;
+
+  @ViewChild('elTagArea') elTagArea: ElementRef;
+  @ViewChild('elPasswordArea') elPasswordArea: ElementRef;
 
   constructor(
     private service: PasswordService,
@@ -76,7 +81,22 @@ export class PasswordComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:resize')
   onResize() {
+    this.setScrollableAreaStyle();
     this.setFileNameLength();
+  }
+
+  private setScrollableAreaStyle() {
+    if (this.elPasswordArea && this.elTagArea) {
+      [
+        this.elPasswordArea.nativeElement as HTMLDivElement,
+        this.elTagArea.nativeElement as HTMLDivElement,
+      ].forEach((el) => {
+        el.style.maxHeight =
+          window.innerHeight - el.getBoundingClientRect().top + 'px';
+      });
+    } else {
+      setTimeout(() => this.setScrollableAreaStyle(), 100);
+    }
   }
 
   private setFileNameLength() {
@@ -108,7 +128,17 @@ export class PasswordComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.setScrollableAreaStyle();
     this.setFileNameLength();
+  }
+
+  onClickTag(tag: string) {
+    const element = document.getElementById(tag);
+
+    if (element) {
+      const parent = this.elPasswordArea.nativeElement as HTMLDivElement;
+      parent.scrollTop = element.getBoundingClientRect().top;
+    }
   }
 
   async onClickSelectFile() {

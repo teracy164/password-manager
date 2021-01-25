@@ -84,7 +84,6 @@ export class GeneratePasswordDialogComponent implements OnInit {
 
   onSelected(index: number) {
     const password = this.candidates[index];
-    console.log(password);
     this.ngZone.run(() => {
       this.dialogRef.close(password);
     });

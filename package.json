@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run write-env && ng serve --port 8000",
+    "start": "npm run write-env && ng serve --port 8000 --serve-path /password-manager",
     "build": "npm run write-env && ng build",
     "test": "ng test",
     "lint": "ng lint",
