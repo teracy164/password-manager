@@ -5,37 +5,55 @@
 <mat-dialog-content class="mat-typography">
   <div *ngIf="isNewFile; else list" [formGroup]="form">
     <mat-form-field class="example-form-field" style="width: 100%">
-      <mat-label>File Name</mat-label>
+      <mat-label class="required">File Name</mat-label>
       <input matInput type="text" formControlName="fileName" />
     </mat-form-field>
   </div>
   <ng-template #list>
-    <p *ngIf="selectedFile">selected: {{ selectedFile.name }}</p>
-    <ul *ngIf="files">
-      <li *ngFor="let file of files">
-        <a class="file" (click)="onSelectFile(file)">
-          <mat-icon>{{ isFolder(file) ? "folder" : "text_snippet" }}</mat-icon>
-          <span class="file-name">
-            {{ file.name }}
-          </span>
-        </a>
-      </li>
-    </ul>
+    <div *ngIf="!isInitializing; else templateInitializing">
+      <p *ngIf="selectedFile">selected: {{ selectedFile.name }}</p>
+      <ul *ngIf="files">
+        <li *ngFor="let file of files">
+          <a class="file" (click)="onSelectFile(file)">
+            <mat-icon>{{
+              isFolder(file) ? "folder" : "text_snippet"
+            }}</mat-icon>
+            <span class="file-name">
+              {{ file.name }}
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <ng-template #templateInitializing>
+      <div
+        style="
+          width: 100%;
+          height: 200px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        Loading...
+      </div>
+    </ng-template>
   </ng-template>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <div class="footer">
-    <ng-container *ngIf="isNewFile; else listFooter">
-      <div class="spacer"></div>
-      <button mat-button (click)="form = null">back</button>
-      <button mat-raised-button color="primary" (click)="onClickCreateFile()">
-        create
-      </button>
-    </ng-container>
+  <div class="footer" style="justify-content: space-between">
+    <div></div>
+    <div>
+      <ng-container *ngIf="isNewFile; else listFooter">
+        <button mat-button (click)="form = null">back</button>
+        <button mat-raised-button color="primary" (click)="onClickCreateFile()">
+          create
+        </button>
+      </ng-container>
+    </div>
   </div>
   <ng-template #listFooter>
-    <div class="spacer"></div>
     <button mat-button (click)="dialogRef.close()">close</button>
     <button
       mat-raised-button
@@ -43,7 +61,7 @@
       (click)="onClickNewFile()"
       [disabled]="isProc"
     >
-      new
+      new file
     </button>
   </ng-template>
 </mat-dialog-actions>

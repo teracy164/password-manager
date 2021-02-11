@@ -14,6 +14,7 @@ import { PasswordService } from '../password.service';
 export class SelectFileDialogComponent implements OnInit {
   files: FileMetaInfo[];
   form: FormGroup;
+  isInitializing = true;
 
   constructor(
     public dialogRef: MatDialogRef<SelectFileDialogComponent>,
@@ -22,10 +23,6 @@ export class SelectFileDialogComponent implements OnInit {
     private ngZone: NgZone,
     private loading: Loading
   ) {}
-
-  get isLoading() {
-    return this.loading.isLoading;
-  }
 
   get isNewFile() {
     return this.form;
@@ -40,11 +37,9 @@ export class SelectFileDialogComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.loading.start();
-
     this.files = await this.drive.getFiles();
 
-    this.loading.end();
+    this.isInitializing = false;
   }
 
   onSelectFile(file: FileMetaInfo) {

@@ -3,7 +3,7 @@
   <div *ngIf="form" [formGroup]="form">
     <div>
       <mat-form-field>
-        <mat-label>Name*</mat-label>
+        <mat-label class="required">Name</mat-label>
         <input matInput formControlName="name" />
       </mat-form-field>
     </div>
@@ -15,7 +15,7 @@
     </div>
     <div style="display: flex">
       <mat-form-field>
-        <mat-label>Password*</mat-label>
+        <mat-label class="required">Password</mat-label>
         <input
           matInput
           formControlName="password"
@@ -79,25 +79,28 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <div class="footer">
-    <button
-      *ngIf="isEdit"
-      mat-raised-button
-      color="warn"
-      (click)="onClickDelete()"
-      [disabled]="isLoading"
-    >
-      delete
-    </button>
-    <div class="spacer"></div>
-    <button mat-button (click)="onClickClose()">close</button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onClickSave()"
-      [disabled]="isLoading"
-    >
-      save
-    </button>
+  <div class="footer" style="justify-content: space-between">
+    <div>
+      <button
+        *ngIf="isEdit"
+        mat-raised-button
+        color="warn"
+        (click)="onClickDelete()"
+        [disabled]="isLoading"
+      >
+        delete
+      </button>
+    </div>
+    <div>
+      <button mat-button (click)="onClickClose()">close</button>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onClickSave()"
+        [disabled]="isLoading"
+      >
+        save
+      </button>
+    </div>
   </div>
 </mat-dialog-actions>

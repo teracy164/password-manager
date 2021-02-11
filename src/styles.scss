@@ -62,3 +62,15 @@ body {
 button:hover {
   opacity: 0.7;
 }
+
+mat-label {
+  position: relative;
+  &.required::after {
+    content: "*";
+    color: red;
+    font-size: 16px;
+    position: absolute;
+    left: 100%;
+    margin-left: 3px;
+  }
+}

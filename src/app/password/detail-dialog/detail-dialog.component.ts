@@ -116,9 +116,7 @@ export class DetailDialogComponent implements OnInit {
 
   async onClickDelete() {
     const target = this.src;
-    if (
-      !confirm(`${target.name}を削除して良いですか？¥n削除すると元に戻せません`)
-    ) {
+    if (!confirm(`Delete ${target.name}, OK?`)) {
       return;
     }
     this.loading.start();
