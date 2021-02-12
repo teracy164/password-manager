@@ -21,6 +21,10 @@ export class GoogleDriveApiService {
     return this.googleapi.gapi.client.drive;
   }
 
+  get cryptoKey() {
+    return this.googleapi.userId;
+  }
+
   public isFolder(file: FileMetaInfo) {
     return file.mimeType === 'application/vnd.google-apps.folder';
   }
@@ -52,45 +56,45 @@ export class GoogleDriveApiService {
   }
 
   async getFile(fileId: string): Promise<FileMetaInfo> {
-    try {
-      const result = await this.drive.files.get({ fileId });
-      if (result.status === 200) {
-        return result.result;
-      } else {
-        throw new Error('get file failed.');
-      }
-    } catch (err) {
-      console.error(err);
-      return null;
+    // try {
+    const result = await this.drive.files.get({ fileId });
+    if (result.status === 200) {
+      return result.result;
+    } else {
+      throw new Error('get file failed.');
     }
+    // } catch (err) {
+    //   console.error(err);
+    //   return null;
+    // }
   }
 
   async getFileContents(options: {
     fileId: string;
     mimeType?: string;
   }): Promise<string> {
-    try {
-      if (!options.mimeType) {
-        options.mimeType = 'text/plain';
-      }
-      const result = await this.drive.files.export(options);
-      if (result.status === 200) {
-        return result.body;
-      } else {
-        throw new Error('get file contents failed.');
-      }
-    } catch (err) {
-      console.error(err);
-      return null;
+    // try {
+    if (!options.mimeType) {
+      options.mimeType = 'text/plain';
     }
+    const result = await this.drive.files.export(options);
+    if (result.status === 200) {
+      return result.body;
+    } else {
+      throw new Error('get file contents failed.');
+    }
+    // } catch (err) {
+    //   console.error(err);
+    //   return null;
+    // }
   }
 
-  async getPasswordFile(fileId: string, decryptionKey: string) {
+  async getPasswordFile(fileId: string) {
     const contents = await this.getFileContents({
       fileId,
       mimeType: 'text/plain',
     });
-    return this.decode(contents, decryptionKey);
+    return this.decode(contents, this.cryptoKey);
   }
 
   async createEmptyFile(fileName: string): Promise<FileMetaInfo> {
@@ -114,8 +118,7 @@ export class GoogleDriveApiService {
 
   async updatePasswordFile(
     fileId: string,
-    passwords: Password[],
-    key: string
+    passwords: Password[]
   ): Promise<FileMetaInfo> {
     try {
       const src: PasswordFile = {
@@ -124,14 +127,7 @@ export class GoogleDriveApiService {
         passwords,
       };
 
-      const data = this.encryption(src, key);
-
-      const mimeType: FileMimeType = 'application/vnd.google-apps.document';
-      const params = {
-        fileId,
-        uploadType: 'media',
-        mimeType,
-      };
+      const data = this.encryption(src, this.cryptoKey);
 
       const result = await this.googleapi.gapi.client.request({
         path: '/upload/drive/v3/files/' + fileId,
@@ -142,7 +138,6 @@ export class GoogleDriveApiService {
         body: data,
       });
 
-      // const result = await this.drive.files.update(params, { name: 'update' });
       if (result.status === 200) {
         return result.result;
       } else {
@@ -155,36 +150,40 @@ export class GoogleDriveApiService {
   }
 
   private decode(fileContents: string, decryptionKey: string): Password[] {
-    try {
-      if (!fileContents?.trim().length) {
-        console.warn('contents nothing.');
-        return [];
-      }
-
-      // 復号化
-      const decryptionData = this.decryption(fileContents, decryptionKey);
-      if (!decryptionData) {
-        throw new Error('decryption failed.');
-      }
-      // 当システムのファイルであればパスワード一覧を返却
-      if (decryptionData[KEY_FILE_CREATED_BY] === SYSTEM_NAME) {
-        return decryptionData.passwords;
-      } else {
-        throw new Error('invalid file format.');
-      }
-    } catch (err) {
-      console.error(err);
-      return null;
+    // try {
+    if (!fileContents?.trim().length) {
+      console.warn('contents nothing.');
+      return [];
     }
+
+    // 復号化
+    const decryptionData = this.decryption(fileContents, decryptionKey);
+    if (!decryptionData) {
+      throw new Error('decryption failed.');
+    }
+    // 当システムのファイルであればパスワード一覧を返却
+    if (decryptionData[KEY_FILE_CREATED_BY] === SYSTEM_NAME) {
+      return decryptionData.passwords;
+    } else {
+      throw new Error('invalid file format.');
+    }
+    // } catch (err) {
+    //   console.error(err);
+    //   return null;
+    // }
   }
 
   private decryption(
     encryptionData: string,
     decryptionKey: string
   ): PasswordFile {
-    const bytes = crypto.AES.decrypt(encryptionData.trim(), decryptionKey);
-    const decryptionString = bytes.toString(crypto.enc.Utf8);
-    return JSON.parse(decryptionString) as PasswordFile;
+    try {
+      const bytes = crypto.AES.decrypt(encryptionData.trim(), decryptionKey);
+      const decryptionString = bytes.toString(crypto.enc.Utf8);
+      return JSON.parse(decryptionString) as PasswordFile;
+    } catch (err) {
+      throw new Error('decryption failed.');
+    }
   }
 
   private encryption(src: PasswordFile, encryptionKey: string) {

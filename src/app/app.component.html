@@ -3,12 +3,19 @@
   <div class="main">
     <router-outlet *ngIf="isSignedIn"></router-outlet>
     <div *ngIf="!isSignedIn" class="no-auth">
-      <div>
+      <div class="description">
         <h3>本システムはGoogle Driveを利用したパスワード管理ツールです</h3>
         <p>・ブラウザがあればどんな環境でも利用できます</p>
         <p>・暗号化してからデータを送信するため安心</p>
+        <p>・パスワードファイルはGoogleDrive上に保存されます</p>
 
-        ※当システムは予告なしに終了する可能性があります
+        <hr />
+        <h3>利用規約</h3>
+        <p>※当システムは予告なしに終了する可能性があります</p>
+        <p>※当システムの利用は自己責任でお願いします</p>
+        <p>
+          （システム利用によるいかなる損害に関しても当方は一切の責任を負わないものとします）
+        </p>
       </div>
     </div>
   </div>

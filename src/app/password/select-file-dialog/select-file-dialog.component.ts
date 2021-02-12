@@ -45,9 +45,11 @@ export class SelectFileDialogComponent implements OnInit {
   onSelectFile(file: FileMetaInfo) {
     this.loading.start();
     this.ngZone.run(async () => {
-      await this.service.selectFile(file);
-      this.dialogRef.close(file);
-
+      if (await this.service.selectFile(file)) {
+        this.dialogRef.close(file);
+      } else {
+        alert('file read failed.');
+      }
       this.loading.end();
     });
   }

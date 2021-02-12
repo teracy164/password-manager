@@ -86,17 +86,19 @@ export class PasswordComponent implements OnInit, AfterViewInit {
     this.setFileNameLength();
   }
 
-  private setScrollableAreaStyle() {
+  private setScrollableAreaStyle(cnt = 0) {
+    if (cnt++ > 20) return;
+
     if (this.elPasswordArea && this.elTagArea) {
       [
         this.elPasswordArea.nativeElement as HTMLDivElement,
         this.elTagArea.nativeElement as HTMLDivElement,
       ].forEach((el) => {
-        el.style.maxHeight =
+        el.style.height =
           window.innerHeight - el.getBoundingClientRect().top + 'px';
       });
     } else {
-      setTimeout(() => this.setScrollableAreaStyle(), 100);
+      setTimeout(() => this.setScrollableAreaStyle(cnt), 100);
     }
   }
 
@@ -147,18 +149,24 @@ export class PasswordComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async onClickSelectFile() {
+  onClickSelectFile() {
+    const isFirstSelect = this.service.selected ? false : true;
     this.dialog
       .open(SelectFileDialogComponent, DIALOG_CONFIG_DEFAULT)
       .afterClosed()
-      .subscribe((selectedFile) => {
+      .subscribe(async (selectedFile) => {
         if (selectedFile) {
-          this.service.init();
+          await this.service.init();
+
+          if (isFirstSelect) {
+            // 初めてファイル選択をする場合はテンプレートが変わるため、高さ調整を行う
+            this.setScrollableAreaStyle();
+          }
         }
       });
   }
 
-  async onClickAddPassword() {
+  onClickAddPassword() {
     this.dialog
       .open(DetailDialogComponent, DIALOG_CONFIG_DEFAULT)
       .afterClosed()

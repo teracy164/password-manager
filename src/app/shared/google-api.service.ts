@@ -20,6 +20,14 @@ export class GoogleApiService {
     return this.gapi.auth2.getAuthInstance();
   }
 
+  get currentUser() {
+    return this.instAuth2.currentUser;
+  }
+
+  get userId() {
+    return this.currentUser.get().getBasicProfile().getId();
+  }
+
   public init() {
     this.loadGoogleApiScript();
   }

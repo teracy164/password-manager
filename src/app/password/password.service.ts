@@ -13,7 +13,6 @@ export class PasswordService {
   passwordsEachTag: { [tag: string]: Password[] };
   tags: string[];
 
-  key: string = 'test';
   readonly noTagKey = 'NoTag';
 
   constructor(
@@ -28,11 +27,9 @@ export class PasswordService {
       if (last) {
         this.selected = await this.drive.getFile(last.id);
         if (this.selected) {
-          const passwords = await this.drive.getPasswordFile(
-            this.selected.id,
-            this.key
-          );
+          const passwords = await this.drive.getPasswordFile(this.selected.id);
           this.setPasswordInfo(passwords);
+          console.log(passwords);
         } else {
           throw new Error('file not found.');
         }
@@ -45,7 +42,8 @@ export class PasswordService {
   }
 
   private setPasswordInfo(passwords: Password[]) {
-    this.passwords = passwords.sort((s1, s2) => (s1.name < s2.name ? -1 : 1));
+    this.passwords =
+      passwords?.sort((s1, s2) => (s1.name < s2.name ? -1 : 1)) || [];
     this.passwordsEachTag = this.toPasswordsEachTag(this.passwords);
     this.tags = this.toTags(this.passwords);
   }
@@ -53,7 +51,7 @@ export class PasswordService {
   private toPasswordsEachTag(
     passwords: Password[]
   ): { [tag: string]: Password[] } {
-    return passwords.reduce(
+    return passwords?.reduce(
       (passwords, pw) => {
         if (pw.tags.length) {
           pw.tags.forEach((tag) => {
@@ -76,10 +74,16 @@ export class PasswordService {
   }
 
   async selectFile(file: FileMetaInfo) {
-    const passwords = await this.drive.getPasswordFile(file.id, this.key);
-    this.setPasswordInfo(passwords);
+    try {
+      const passwords = await this.drive.getPasswordFile(file.id);
+      this.setPasswordInfo(passwords);
 
-    this.storage.setPasswordFileInfo(file);
+      this.storage.setPasswordFileInfo(file);
+
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
   async createFile(fileName: string) {
@@ -122,8 +126,7 @@ export class PasswordService {
   private async updateFile(passwords: Password[]) {
     const result = await this.drive.updatePasswordFile(
       this.selected.id,
-      passwords,
-      this.key
+      passwords
     );
     if (result) {
       this.setPasswordInfo(passwords);
