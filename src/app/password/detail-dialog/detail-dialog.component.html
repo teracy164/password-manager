@@ -86,19 +86,13 @@
         mat-raised-button
         color="warn"
         (click)="onClickDelete()"
-        [disabled]="isLoading"
       >
         delete
       </button>
     </div>
     <div>
       <button mat-button (click)="onClickClose()">close</button>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="onClickSave()"
-        [disabled]="isLoading"
-      >
+      <button mat-raised-button color="primary" (click)="onClickSave()">
         save
       </button>
     </div>

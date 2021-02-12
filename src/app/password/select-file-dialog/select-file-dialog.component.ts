@@ -49,8 +49,8 @@ export class SelectFileDialogComponent implements OnInit {
         this.dialogRef.close(file);
       } else {
         alert('file read failed.');
+        this.loading.end();
       }
-      this.loading.end();
     });
   }
 

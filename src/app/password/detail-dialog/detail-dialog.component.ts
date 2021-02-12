@@ -43,10 +43,6 @@ export class DetailDialogComponent implements OnInit {
     return this.src ? true : false;
   }
 
-  get isLoading() {
-    return this.loading.isLoading;
-  }
-
   constructor(
     public dialogRef: MatDialogRef<DetailDialogComponent>,
     private dialog: MatDialog,

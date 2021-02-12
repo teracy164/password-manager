@@ -74,3 +74,12 @@ mat-label {
     margin-left: 3px;
   }
 }
+
+button.mat-primary {
+  background: rgb(100, 200, 100) !important;
+  color: white !important;
+}
+button.mat-primary:disabled {
+  background: inherit !important;
+  color: inherit !important;
+}

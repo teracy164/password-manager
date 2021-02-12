@@ -55,12 +55,7 @@
   </div>
   <ng-template #listFooter>
     <button mat-button (click)="dialogRef.close()">close</button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onClickNewFile()"
-      [disabled]="isProc"
-    >
+    <button mat-raised-button color="primary" (click)="onClickNewFile()">
       new file
     </button>
   </ng-template>

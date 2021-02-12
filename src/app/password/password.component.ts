@@ -24,6 +24,7 @@ import { SelectFileDialogComponent } from './select-file-dialog/select-file-dial
 })
 export class PasswordComponent implements OnInit, AfterViewInit {
   isInitializing = true;
+  isFileLoading = false;
   dispFileNameLength = 0;
   settings: Settings;
 
@@ -118,17 +119,21 @@ export class PasswordComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
-    this.loading.start();
-    if (await this.service.init()) {
-      this.ngZone.run(() => {
-        this.settings = this.storage.getSettings();
-        this.loading.end();
-      });
-    } else {
+    this.settings = this.storage.getSettings();
+    if (!(await this.init())) {
       alert('ファイルの読み込みに失敗しました');
-      this.loading.end();
     }
     this.isInitializing = false;
+  }
+
+  private async init() {
+    this.loading.start();
+    this.isFileLoading = true;
+    const result = await this.service.init();
+    this.isFileLoading = false;
+    this.setScrollableAreaStyle();
+    this.loading.end();
+    return result;
   }
 
   ngAfterViewInit() {
@@ -150,18 +155,12 @@ export class PasswordComponent implements OnInit, AfterViewInit {
   }
 
   onClickSelectFile() {
-    const isFirstSelect = this.service.selected ? false : true;
     this.dialog
       .open(SelectFileDialogComponent, DIALOG_CONFIG_DEFAULT)
       .afterClosed()
-      .subscribe(async (selectedFile) => {
+      .subscribe((selectedFile) => {
         if (selectedFile) {
-          await this.service.init();
-
-          if (isFirstSelect) {
-            // 初めてファイル選択をする場合はテンプレートが変わるため、高さ調整を行う
-            this.setScrollableAreaStyle();
-          }
+          this.init();
         }
       });
   }

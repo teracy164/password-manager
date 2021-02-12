@@ -30,50 +30,36 @@ export class GoogleDriveApiService {
   }
 
   async getFiles(): Promise<FileMetaInfo[]> {
-    try {
-      const result = await this.drive.files.list({
-        pageSize: 100,
-        trashed: false,
-        q:
-          "mimeType='application/vnd.google-apps.document' and trashed = false",
-        spaces: 'drive',
-        fields: 'nextPageToken, files(id, kind, name, mimeType)',
+    const result = await this.drive.files.list({
+      pageSize: 100,
+      trashed: false,
+      q: "mimeType='application/vnd.google-apps.document' and trashed = false",
+      spaces: 'drive',
+      fields: 'nextPageToken, files(id, kind, name, mimeType)',
+    });
+    if (result.status === 200) {
+      return result.result.files.sort((s1: FileMetaInfo, s2: FileMetaInfo) => {
+        // 種別ごとにソート
+        return s1.mimeType < s2.mimeType ? 1 : -1;
       });
-      if (result.status === 200) {
-        return result.result.files.sort(
-          (s1: FileMetaInfo, s2: FileMetaInfo) => {
-            // 種別ごとにソート
-            return s1.mimeType < s2.mimeType ? 1 : -1;
-          }
-        );
-      } else {
-        throw new Error('get files failed.');
-      }
-    } catch (err) {
-      console.error(err);
-      return [];
+    } else {
+      throw new Error('get files failed.');
     }
   }
 
   async getFile(fileId: string): Promise<FileMetaInfo> {
-    // try {
     const result = await this.drive.files.get({ fileId });
     if (result.status === 200) {
       return result.result;
     } else {
       throw new Error('get file failed.');
     }
-    // } catch (err) {
-    //   console.error(err);
-    //   return null;
-    // }
   }
 
   async getFileContents(options: {
     fileId: string;
     mimeType?: string;
   }): Promise<string> {
-    // try {
     if (!options.mimeType) {
       options.mimeType = 'text/plain';
     }
@@ -83,10 +69,6 @@ export class GoogleDriveApiService {
     } else {
       throw new Error('get file contents failed.');
     }
-    // } catch (err) {
-    //   console.error(err);
-    //   return null;
-    // }
   }
 
   async getPasswordFile(fileId: string) {
@@ -98,21 +80,16 @@ export class GoogleDriveApiService {
   }
 
   async createEmptyFile(fileName: string): Promise<FileMetaInfo> {
-    try {
-      const mimeType: FileMimeType = 'application/vnd.google-apps.document';
-      const result = await this.drive.files.create({
-        uploadType: 'media',
-        name: fileName,
-        mimeType,
-      });
-      if (result.status === 200) {
-        return result.result;
-      } else {
-        throw new Error('create file failed.');
-      }
-    } catch (err) {
-      console.error(err);
-      return null;
+    const mimeType: FileMimeType = 'application/vnd.google-apps.document';
+    const result = await this.drive.files.create({
+      uploadType: 'media',
+      name: fileName,
+      mimeType,
+    });
+    if (result.status === 200) {
+      return result.result;
+    } else {
+      throw new Error('create file failed.');
     }
   }
 
@@ -120,39 +97,32 @@ export class GoogleDriveApiService {
     fileId: string,
     passwords: Password[]
   ): Promise<FileMetaInfo> {
-    try {
-      const src: PasswordFile = {
-        [KEY_FILE_CREATED_BY]: SYSTEM_NAME,
-        [KEY_FILE_VERSION]: SYSTEM_VERSION,
-        passwords,
-      };
+    const src: PasswordFile = {
+      [KEY_FILE_CREATED_BY]: SYSTEM_NAME,
+      [KEY_FILE_VERSION]: SYSTEM_VERSION,
+      passwords,
+    };
 
-      const data = this.encryption(src, this.cryptoKey);
+    const data = this.encryption(src, this.cryptoKey);
 
-      const result = await this.googleapi.gapi.client.request({
-        path: '/upload/drive/v3/files/' + fileId,
-        method: 'PATCH',
-        params: {
-          uploadType: 'media',
-        },
-        body: data,
-      });
+    const result = await this.googleapi.gapi.client.request({
+      path: '/upload/drive/v3/files/' + fileId,
+      method: 'PATCH',
+      params: {
+        uploadType: 'media',
+      },
+      body: data,
+    });
 
-      if (result.status === 200) {
-        return result.result;
-      } else {
-        throw new Error('update file failed.');
-      }
-    } catch (err) {
-      console.error(err);
-      return null;
+    if (result.status === 200) {
+      return result.result;
+    } else {
+      throw new Error('update file failed.');
     }
   }
 
   private decode(fileContents: string, decryptionKey: string): Password[] {
-    // try {
     if (!fileContents?.trim().length) {
-      console.warn('contents nothing.');
       return [];
     }
 
@@ -161,29 +131,22 @@ export class GoogleDriveApiService {
     if (!decryptionData) {
       throw new Error('decryption failed.');
     }
+
     // 当システムのファイルであればパスワード一覧を返却
     if (decryptionData[KEY_FILE_CREATED_BY] === SYSTEM_NAME) {
       return decryptionData.passwords;
     } else {
       throw new Error('invalid file format.');
     }
-    // } catch (err) {
-    //   console.error(err);
-    //   return null;
-    // }
   }
 
   private decryption(
     encryptionData: string,
     decryptionKey: string
   ): PasswordFile {
-    try {
-      const bytes = crypto.AES.decrypt(encryptionData.trim(), decryptionKey);
-      const decryptionString = bytes.toString(crypto.enc.Utf8);
-      return JSON.parse(decryptionString) as PasswordFile;
-    } catch (err) {
-      throw new Error('decryption failed.');
-    }
+    const bytes = crypto.AES.decrypt(encryptionData.trim(), decryptionKey);
+    const decryptionString = bytes.toString(crypto.enc.Utf8);
+    return JSON.parse(decryptionString) as PasswordFile;
   }
 
   private encryption(src: PasswordFile, encryptionKey: string) {

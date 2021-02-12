@@ -29,7 +29,6 @@ export class PasswordService {
         if (this.selected) {
           const passwords = await this.drive.getPasswordFile(this.selected.id);
           this.setPasswordInfo(passwords);
-          console.log(passwords);
         } else {
           throw new Error('file not found.');
         }
@@ -82,45 +81,68 @@ export class PasswordService {
 
       return true;
     } catch (err) {
+      console.error(err);
       return false;
     }
   }
 
   async createFile(fileName: string) {
-    const result = await this.drive.createEmptyFile(fileName);
-    if (result) {
-      this.selected = result;
-      this.storage.setPasswordFileInfo(result);
-    }
+    try {
+      const result = await this.drive.createEmptyFile(fileName);
+      if (result) {
+        this.selected = result;
+        this.storage.setPasswordFileInfo(result);
+      }
 
-    return result;
+      return result;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
   }
 
   async addPassword(password: Password) {
-    password.id = uuidV4();
+    try {
+      password.id = uuidV4();
 
-    const passwords = [...(this.passwords || []), password];
-    return this.updateFile(passwords);
+      const passwords = [...(this.passwords || []), password];
+      return this.updateFile(passwords);
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
   }
 
   async updatePassword(passwordId: string, password: Password) {
-    const index = this.passwords.findIndex((pw) => pw.id === passwordId);
-    if (index >= 0) {
-      const passwords = [...this.passwords];
-      passwords.splice(index, 1, password);
-      return this.updateFile(passwords);
+    try {
+      const index = this.passwords.findIndex((pw) => pw.id === passwordId);
+      if (index >= 0) {
+        const passwords = [...this.passwords];
+        passwords.splice(index, 1, password);
+        return this.updateFile(passwords);
+      } else {
+        throw new Error('target not found.');
+      }
+    } catch (err) {
+      console.error(err);
+      return false;
     }
-    return false;
   }
 
   async deletePassword(passwordId: string) {
-    const index = this.passwords.findIndex((pw) => pw.id === passwordId);
-    if (index >= 0) {
-      const passwords = [...this.passwords];
-      passwords.splice(index, 1);
-      return this.updateFile(passwords);
+    try {
+      const index = this.passwords.findIndex((pw) => pw.id === passwordId);
+      if (index >= 0) {
+        const passwords = [...this.passwords];
+        passwords.splice(index, 1);
+        return this.updateFile(passwords);
+      } else {
+        throw new Error('target not found.');
+      }
+    } catch (err) {
+      console.error(err);
+      return false;
     }
-    return false;
   }
 
   private async updateFile(passwords: Password[]) {
