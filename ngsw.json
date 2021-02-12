@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1613096773451,
+  "timestamp": 1613115744324,
   "index": "/password-manager/index.html",
   "assetGroups": [
     {
@@ -13,11 +13,11 @@
       "urls": [
         "/password-manager/favicon.ico",
         "/password-manager/index.html",
-        "/password-manager/main.3464505443c1c4f55cda.js",
+        "/password-manager/main.5a84c0e17b890c82c5b8.js",
         "/password-manager/manifest.webmanifest",
         "/password-manager/polyfills.35a5ca1855eb057f016a.js",
         "/password-manager/runtime.b4c3b1b86ef27ac68745.js",
-        "/password-manager/styles.fb414434bd34325c671c.css"
+        "/password-manager/styles.f28ecf037263356694d4.css"
       ],
       "patterns": []
     },
@@ -54,12 +54,12 @@
     "/password-manager/assets/icons/icon-96x96.png": "3914125a4b445bf111c5627875fc190f560daa41",
     "/password-manager/assets/valiables.scss": "5686e3480370dab2ea79b7c816af9a1c769f71fc",
     "/password-manager/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "/password-manager/index.html": "666aea309fe4fc68c4985f565e91c6ea1d8480ce",
-    "/password-manager/main.3464505443c1c4f55cda.js": "13f23e291fd26fcf6a100cbc163cc5fac1c66fce",
+    "/password-manager/index.html": "b0ec62b9c6997789bd0d442da1444e5984ac661c",
+    "/password-manager/main.5a84c0e17b890c82c5b8.js": "2d6b52bc885e3c57286a0e0019c383cc7a2bd0db",
     "/password-manager/manifest.webmanifest": "bca67229a2c81f237365c6d48ef9ff9bc7c4e36b",
     "/password-manager/polyfills.35a5ca1855eb057f016a.js": "578360d24ce37383f261c7ef63b1f822d28e8dde",
     "/password-manager/runtime.b4c3b1b86ef27ac68745.js": "42808fa0af923efc79e0f5ad8a195e6b604e9b8a",
-    "/password-manager/styles.fb414434bd34325c671c.css": "58bff82851a9fedc825629fb583904bfd1463c84"
+    "/password-manager/styles.f28ecf037263356694d4.css": "283e66500162f94b3ed4b4ee9d7f356349b32797"
   },
   "navigationUrls": [
     {
