@@ -25,6 +25,7 @@ import { SelectFileDialogComponent } from './select-file-dialog/select-file-dial
 export class PasswordComponent implements OnInit, AfterViewInit {
   isInitializing = true;
   isFileLoading = false;
+  isOpenTags = true;
   dispFileNameLength = 0;
   settings: Settings;
 
@@ -139,6 +140,10 @@ export class PasswordComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.setScrollableAreaStyle();
     this.setFileNameLength();
+
+    if (window.innerWidth < 500) {
+      this.isOpenTags = false;
+    }
   }
 
   onClickTag(tag: string) {
