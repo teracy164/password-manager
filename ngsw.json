@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1613286527184,
+  "timestamp": 1613287836913,
   "index": "/password-manager/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/password-manager/favicon.ico",
         "/password-manager/index.html",
-        "/password-manager/main.bed9e6b8b42683c8d33d.js",
+        "/password-manager/main.a80427e0558ef9f3a312.js",
         "/password-manager/manifest.webmanifest",
         "/password-manager/polyfills.35a5ca1855eb057f016a.js",
         "/password-manager/runtime.b4c3b1b86ef27ac68745.js",
@@ -54,8 +54,8 @@
     "/password-manager/assets/icons/icon-96x96.png": "5ee743c0e48a11ddd11f74b1efd6e1ed323c4db9",
     "/password-manager/assets/valiables.scss": "5686e3480370dab2ea79b7c816af9a1c769f71fc",
     "/password-manager/favicon.ico": "c220cef7675f2aca6785e95379a0a93aa8c0bd91",
-    "/password-manager/index.html": "7e39d40509113d80fd9d18142a9c00d9783bffcf",
-    "/password-manager/main.bed9e6b8b42683c8d33d.js": "24449b115524f2e1f47a6ba70907534539fbc060",
+    "/password-manager/index.html": "a88541ec8eccd249d7cd6a43d8c3f5d0fac3a280",
+    "/password-manager/main.a80427e0558ef9f3a312.js": "19acf4534262d2c7d436670f0f26c02e54b9ce50",
     "/password-manager/manifest.webmanifest": "bca67229a2c81f237365c6d48ef9ff9bc7c4e36b",
     "/password-manager/polyfills.35a5ca1855eb057f016a.js": "578360d24ce37383f261c7ef63b1f822d28e8dde",
     "/password-manager/runtime.b4c3b1b86ef27ac68745.js": "42808fa0af923efc79e0f5ad8a195e6b604e9b8a",
