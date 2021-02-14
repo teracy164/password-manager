@@ -1,21 +1,17 @@
 <div class="password" [ngClass.lt-sm]="{ mobile: true }" #elPasswordCard>
   <div class="card" (click)="onClickEdit()">
-    <div class="wrapper">
-      <div fxLayout="row">
-        <div fxFlex>
-          <h3 class="name">
-            <a
-              *ngIf="password.url; else noLinkTitle"
-              target="_blank"
-              [href]="password.url"
-              (click)="onClickLink($event)"
-            >
-              {{ password.name }}
-            </a>
-            <ng-template #noLinkTitle>{{ password.name }}</ng-template>
-          </h3>
-        </div>
-      </div>
+    <div fxFlex class="wrapper">
+      <h3 class="name">
+        <a
+          *ngIf="password.url; else noLinkTitle"
+          target="_blank"
+          [href]="password.url"
+          (click)="onClickLink($event)"
+        >
+          {{ password.name }}
+        </a>
+        <ng-template #noLinkTitle>{{ password.name }}</ng-template>
+      </h3>
       <div style="text-align: right">
         <button
           *ngIf="password.loginId"
