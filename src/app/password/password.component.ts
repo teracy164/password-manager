@@ -171,11 +171,15 @@ export class PasswordComponent implements OnInit, AfterViewInit {
   }
 
   onClickAddPassword() {
+    const isFirst = this.passwords.length === 0;
     this.dialog
       .open(DetailDialogComponent, DIALOG_CONFIG_DEFAULT)
       .afterClosed()
       .subscribe((result) => {
         this.cdRef.detectChanges();
+        if (isFirst) {
+          this.setScrollableAreaStyle();
+        }
       });
   }
 
