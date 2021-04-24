@@ -1,4 +1,4 @@
-import { Component, Input, NgZone } from '@angular/core';
+import { Component, EventEmitter, NgZone, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { GoogleApiService } from '../../google-api.service';
 
@@ -7,14 +7,17 @@ import { GoogleApiService } from '../../google-api.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
-  @Input() isSignedIn = false;
+export class HeaderComponent implements OnInit {
+  isSignedIn = false;
 
   constructor(
     private googleapi: GoogleApiService,
     private router: Router,
     private ngZone: NgZone
-  ) {
+  ) {}
+
+  ngOnInit() {
+    this.isSignedIn = this.googleapi.isSignedIn;
     this.googleapi.onChangeStatus.subscribe((isSignIn: boolean) => {
       this.isSignedIn = isSignIn;
     });
@@ -31,13 +34,13 @@ export class HeaderComponent {
   async onClickSignIn() {
     const result = await this.googleapi.signIn();
     if (result) {
-      this.navigate('passwords');
+      location.href = '/password-manager/passwords';
     }
   }
 
   async onClickSignOut() {
     await this.googleapi.signOut();
-    this.navigate('/');
+    location.href = '/password-manager';
   }
 
   private navigate(path: string) {
