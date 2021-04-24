@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { GoogleApiService } from './shared/google-api.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class AppComponent implements OnInit {
   isSignedIn = false;
 
   constructor(
+    private router: Router,
     private googleapi: GoogleApiService,
     private cdRef: ChangeDetectorRef
   ) {}

@@ -12,17 +12,5 @@
     height: $mainHeight;
     max-height: $mainHeight;
     overflow-y: hidden;
-
-    .no-auth {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0 20px;
-
-      .description {
-        padding-bottom: 50px;
-      }
-    }
   }
 }

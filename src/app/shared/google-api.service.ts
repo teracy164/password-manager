@@ -13,6 +13,8 @@ export class GoogleApiService {
   /** 認証状態変更検知用 */
   readonly onChangeStatus = new EventEmitter<boolean>();
 
+  private _isSignedIn = false;
+
   get gapi() {
     return (window as any).gapi;
   }
@@ -25,7 +27,11 @@ export class GoogleApiService {
   }
 
   get userId() {
-    return this.currentUser.get().getBasicProfile().getId();
+    return this.currentUser?.get()?.getBasicProfile()?.getId();
+  }
+
+  get isSignedIn() {
+    return this._isSignedIn;
   }
 
   public init() {
@@ -38,7 +44,13 @@ export class GoogleApiService {
    * 完了はonChangeStatusをsubscribeすること
    */
   public signIn() {
-    this.instAuth2.signIn();
+    return new Promise((resolve) => {
+      this.instAuth2.signIn();
+      const sbsc = this.onChangeStatus.subscribe((status) => {
+        sbsc.unsubscribe();
+        return resolve(status);
+      });
+    });
   }
 
   /**
@@ -46,8 +58,14 @@ export class GoogleApiService {
    *
    * 完了はonChangeStatusをsubscribeすること
    */
-  public signOut() {
-    this.instAuth2.signOut();
+  public signOut(): Promise<void> {
+    return new Promise((resolve) => {
+      this.instAuth2.signOut();
+      const sbsc = this.onChangeStatus.subscribe((status) => {
+        sbsc.unsubscribe();
+        return resolve();
+      });
+    });
   }
 
   /**
@@ -89,6 +107,7 @@ export class GoogleApiService {
             const isSignedIn = self.instAuth2.isSignedIn;
             // Listen for sign-in state changes.
             isSignedIn.listen((isSignIn: boolean) => {
+              self._isSignedIn = isSignIn;
               self.onChangeStatus.emit(isSignIn);
             });
 

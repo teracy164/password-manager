@@ -1,5 +1,7 @@
 <mat-toolbar color="primary" style="justify-content: space-between">
-  <span>Password Manager</span>
+  <span>
+    <a style="cursor: pointer" (click)="onClickLogo()">Password Manager</a>
+  </span>
   <span>
     <button mat-stroked-button *ngIf="isSignedIn" (click)="onClickSignOut()">
       <mat-icon>logout</mat-icon>

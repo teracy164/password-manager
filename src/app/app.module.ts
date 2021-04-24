@@ -10,6 +10,8 @@ import { HeaderModule } from './shared/components/header/header.module';
 import { LoadingModule } from './shared/components/loading/loading.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { TopModule } from './top/top.module';
+import { TermsModule } from './terms/terms.module';
 
 const swPath = environment.production
   ? 'password-manager/ngsw-worker.js'
@@ -25,6 +27,8 @@ const swPath = environment.production
     PasswordModule,
     BrowserAnimationsModule,
     LoadingModule,
+    TopModule,
+    TermsModule,
     ServiceWorkerModule.register(swPath, { enabled: environment.production }),
   ],
   bootstrap: [AppComponent],

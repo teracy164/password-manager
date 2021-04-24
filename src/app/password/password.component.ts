@@ -9,9 +9,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Settings } from 'src/types/settings';
 import { Loading } from '../shared/components/loading/loading.service';
 import { DIALOG_CONFIG_DEFAULT } from '../shared/constants/dialog.constant';
+import { GoogleApiService } from '../shared/google-api.service';
 import { StorageService } from '../shared/storage.service';
 import { DetailDialogComponent } from './detail-dialog/detail-dialog.component';
 import { PasswordService } from './password.service';
@@ -33,6 +35,8 @@ export class PasswordComponent implements OnInit, AfterViewInit {
   @ViewChild('elPasswordArea') elPasswordArea: ElementRef;
 
   constructor(
+    private router: Router,
+    private google: GoogleApiService,
     private service: PasswordService,
     private dialog: MatDialog,
     private cdRef: ChangeDetectorRef,
@@ -120,6 +124,13 @@ export class PasswordComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
+    if (!this.google.isSignedIn) {
+      this.ngZone.run(() => {
+        this.router.navigate(['/']);
+      });
+      return;
+    }
+
     this.settings = this.storage.getSettings();
     if (!(await this.init())) {
       alert('ファイルの読み込みに失敗しました');
