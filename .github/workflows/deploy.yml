@@ -30,7 +30,7 @@ jobs:
           npm install
           npm run build --if-present -- --prod
           npm test -- --watch=false --browsers=ChromeHeadless
-          cp -a dist/password-manager/index.html dist/password-manager/404.html
+          cp -a dist/index.html dist/404.html
         env:
           CI: true
       - name: Deploy 🚀
@@ -38,5 +38,5 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: dist/password-manager
+          FOLDER: dist
           CLEAN: true
