@@ -1,4 +1,4 @@
-import { Component, EventEmitter, NgZone, OnInit, Output } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GoogleApiService } from '../../google-api.service';
 
@@ -34,13 +34,13 @@ export class HeaderComponent implements OnInit {
   async onClickSignIn() {
     const result = await this.googleapi.signIn();
     if (result) {
-      location.href = '/password-manager/passwords';
+      location.href = '/passwords';
     }
   }
 
   async onClickSignOut() {
     await this.googleapi.signOut();
-    location.href = '/password-manager';
+    location.href = '/';
   }
 
   private navigate(path: string) {

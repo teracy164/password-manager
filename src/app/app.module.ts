@@ -13,10 +13,6 @@ import { environment } from '../environments/environment';
 import { TopModule } from './top/top.module';
 import { TermsModule } from './terms/terms.module';
 
-const swPath = environment.production
-  ? 'password-manager/ngsw-worker.js'
-  : 'ngsw-worker.js';
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -29,7 +25,9 @@ const swPath = environment.production
     LoadingModule,
     TopModule,
     TermsModule,
-    ServiceWorkerModule.register(swPath, { enabled: environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+    }),
   ],
   bootstrap: [AppComponent],
 })
